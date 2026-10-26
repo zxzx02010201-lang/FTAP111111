@@ -1,0 +1,342 @@
+-- Roblox Delta 腳本：滅世動畫 + 紅色流星邊框特效 + 頂部流光數據面板
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+-- 1. 建立主畫面 GUI (ScreenGui)
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "DestructionGui"
+screenGui.IgnoreGuiInset = true
+screenGui.ResetOnSpawn = false
+screenGui.Parent = playerGui
+
+-- 2. 紅色全螢幕背景
+local bgFrame = Instance.new("Frame")
+bgFrame.Name = "Background"
+bgFrame.Size = UDim2.new(1, 0, 1, 0)
+bgFrame.BackgroundColor3 = Color3.fromRGB(150, 0, 0) -- 深紅色背景
+bgFrame.BorderSizePixel = 0
+bgFrame.Parent = screenGui
+
+-- 3. 仿雨滴與邊框流星特效 (紅色流星雨)
+local rainFolder = Instance.new("Folder")
+rainFolder.Name = "RainFolder"
+rainFolder.Parent = bgFrame
+
+local activeEffect = true
+
+task.spawn(function()
+    while activeEffect do
+        for i = 1, 6 do
+            if not activeEffect then break end
+            local drop = Instance.new("Frame")
+            -- 模擬流星：細長、帶有尾巴的亮紅光條
+            drop.Size = UDim2.new(0, math.random(2, 4), 0, math.random(60, 120))
+            drop.Position = UDim2.new(math.random(), 0, -0.2, 0)
+            drop.BackgroundColor3 = Color3.fromRGB(255, 120, 120)
+            drop.BackgroundTransparency = math.random(10, 40) / 100
+            drop.BorderSizePixel = 0
+            drop.Parent = rainFolder
+
+            -- 流星漸層特效 (讓流星尾巴有漸隱感)
+            local dropGradient = Instance.new("UIGradient")
+            dropGradient.Transparency = NumberSequence.new({
+                NumberSequenceKeypoint.new(0, 0),    -- 頭部最亮
+                NumberSequenceKeypoint.new(1, 1)     -- 尾巴漸漸變透明
+            })
+            dropGradient.Rotation = 90
+            dropGradient.Parent = drop
+
+            -- 流星高速劃過動畫
+            local fallDuration = math.random(4, 8) / 10
+            local tween = TweenService:Create(drop, TweenInfo.new(fallDuration, Enum.EasingStyle.Linear), {
+                Position = UDim2.new(drop.Position.X.Scale + (math.random(-10, 10)/100), 0, 1.2, 0)
+            })
+            tween:Play()
+            tween.Completed:Connect(function()
+                drop:Destroy()
+            end)
+        end
+        task.wait(0.03)
+    end
+end)
+
+-- 4. 開場動畫主容器 (將滅世與兩旁星星組合在一起)
+local titleContainer = Instance.new("Frame")
+titleContainer.Name = "TitleContainer"
+titleContainer.Size = UDim2.new(0, 450, 0, 90)
+titleContainer.Position = UDim2.new(0.5, -225, 0.4, -45)
+titleContainer.BackgroundTransparency = 1
+titleContainer.Parent = bgFrame
+
+-- 中間的「滅世」文字
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Name = "Title"
+titleLabel.Size = UDim2.new(0, 280, 1, 0)
+titleLabel.Position = UDim2.new(0.5, -140, 0, 0)
+titleLabel.BackgroundTransparency = 1
+titleLabel.Text = "滅世"
+titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+titleLabel.TextScaled = true
+titleLabel.Font = Enum.Font.GothamBold
+titleLabel.Parent = titleContainer
+
+local titleGradient = Instance.new("UIGradient")
+titleGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 100, 100)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 0, 0)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(80, 0, 0))
+})
+titleGradient.Rotation = 90
+titleGradient.Parent = titleLabel
+
+local titleStroke = Instance.new("UIStroke")
+titleStroke.Color = Color3.fromRGB(0, 0, 0)
+titleStroke.Thickness = 4
+titleStroke.Transparency = 0.1
+titleStroke.Parent = titleLabel
+
+-- 左邊的獨立星星 "☆" (帶有紅色漸變與平滑放大縮小)
+local leftStar = Instance.new("TextLabel")
+leftStar.Name = "LeftStar"
+leftStar.Size = UDim2.new(0, 80, 1, 0)
+leftStar.Position = UDim2.new(0.5, -210, 0, 0)
+leftStar.BackgroundTransparency = 1
+leftStar.Text = "☆"
+leftStar.TextScaled = true
+leftStar.Font = Enum.Font.GothamBold
+leftStar.Parent = titleContainer
+
+local leftStarGradient = Instance.new("UIGradient")
+leftStarGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 200, 200)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 30, 30)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(120, 0, 0))
+})
+leftStarGradient.Rotation = 45
+leftStarGradient.Parent = leftStar
+
+-- 右邊的獨立星星 "☆" (帶有紅色漸變與平滑放大縮小)
+local rightStar = Instance.new("TextLabel")
+rightStar.Name = "RightStar"
+rightStar.Size = UDim2.new(0, 80, 1, 0)
+rightStar.Position = UDim2.new(0.5, 130, 0, 0)
+rightStar.BackgroundTransparency = 1
+rightStar.Text = "☆"
+rightStar.TextScaled = true
+rightStar.Font = Enum.Font.GothamBold
+rightStar.Parent = titleContainer
+
+local rightStarGradient = Instance.new("UIGradient")
+rightStarGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 200, 200)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 30, 30)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(120, 0, 0))
+})
+rightStarGradient.Rotation = 45
+rightStarGradient.Parent = rightStar
+
+-- 開場動畫特效邏輯
+task.spawn(function()
+    local t = 0
+    while activeEffect do
+        t = t + RunService.RenderStepped:Wait() * 10
+        local flash = math.abs(math.sin(t))
+        
+        -- 滅世文字閃爍與脈動
+        titleGradient.Rotation = 90 + math.sin(t * 0.5) * 20
+        titleStroke.Thickness = 3 + flash * 4
+        
+        -- 兩旁星星平滑放大縮小
+        local scaleOffset = math.sin(t * 1.5) * 12
+        leftStar.Size = UDim2.new(0, 80 + scaleOffset, 1, scaleOffset)
+        rightStar.Size = UDim2.new(0, 80 + scaleOffset, 1, scaleOffset)
+        
+        -- 星星紅色漸變動態流動
+        leftStarGradient.Rotation = (t * 25) % 360
+        rightStarGradient.Rotation = -(t * 25) % 360
+    end
+end)
+
+-- 5. 骷髏頭圖案 (💀) + 紅色漸變色效果
+local skullLabel = Instance.new("TextLabel")
+skullLabel.Name = "Skull"
+skullLabel.Size = UDim2.new(0, 150, 0, 150)
+skullLabel.Position = UDim2.new(0.5, -75, 0.55, -20)
+skullLabel.BackgroundTransparency = 1
+skullLabel.Text = "💀"
+skullLabel.TextScaled = true
+skullLabel.Parent = bgFrame
+
+local skullGradient = Instance.new("UIGradient")
+skullGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 30, 30)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(180, 0, 0)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 120, 120))
+})
+skullGradient.Rotation = 45
+skullGradient.Parent = skullLabel
+
+task.spawn(function()
+    local t = 0
+    while activeEffect do
+        t = t + RunService.RenderStepped:Wait() * 3
+        skullGradient.Rotation = (math.sin(t) * 45) + 45
+    end
+end)
+
+-- 6. 建立頂部資訊面板 (扁長方形，位於螢幕正中央最上方)
+local infoFrame = Instance.new("Frame")
+infoFrame.Name = "InfoPanel"
+infoFrame.Size = UDim2.new(0, 320, 0, 35)
+infoFrame.Position = UDim2.new(0.5, -160, 0, 5)
+infoFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+infoFrame.BackgroundTransparency = 1
+infoFrame.BorderSizePixel = 0
+infoFrame.Parent = screenGui
+
+local uiCorner = Instance.new("UICorner")
+uiCorner.CornerRadius = UDim.new(0, 8)
+uiCorner.Parent = infoFrame
+
+-- 帥氣流光邊框特效
+local panelStroke = Instance.new("UIStroke")
+panelStroke.Color = Color3.fromRGB(255, 255, 255)
+panelStroke.Thickness = 2
+panelStroke.Transparency = 1
+panelStroke.Parent = infoFrame
+
+local strokeGradient = Instance.new("UIGradient")
+strokeGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 80, 80)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 255, 255)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(120, 0, 0))
+})
+strokeGradient.Parent = panelStroke
+
+local infoGradient = Instance.new("UIGradient")
+infoGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(80, 0, 0)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 40, 40))
+})
+infoGradient.Rotation = 45
+infoGradient.Parent = infoFrame
+
+local infoText = Instance.new("TextLabel")
+infoText.Name = "InfoText"
+infoText.Size = UDim2.new(1, 0, 1, 0)
+infoText.BackgroundTransparency = 1
+infoText.Text = "載入中..."
+infoText.TextColor3 = Color3.fromRGB(255, 255, 255)
+infoText.TextSize = 13
+infoText.Font = Enum.Font.GothamBold
+infoText.TextTransparency = 1
+infoText.Parent = infoFrame
+
+local textGradient = Instance.new("UIGradient")
+textGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 180, 180)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 50, 50)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(150, 0, 0))
+})
+textGradient.Rotation = 0
+textGradient.Parent = infoText
+
+local lastUpdate = 0
+local frameCount = 0
+local currentFps = 60
+
+RunService.RenderStepped:Connect(function(dt)
+    frameCount = frameCount + 1
+    local now = tick()
+    if now - lastUpdate >= 0.5 then
+        currentFps = math.floor(frameCount / (now - lastUpdate))
+        frameCount = 0
+        lastUpdate = now
+    end
+end)
+
+-- 7. 等待 3 秒後自動結束滅世畫面，顯示頂部資訊面板
+task.delay(3, function()
+    activeEffect = false
+    
+    local fadeTween = TweenService:Create(bgFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        BackgroundTransparency = 1
+    })
+    local containerFade = TweenService:Create(titleContainer, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        Transparency = 1
+    })
+    local textFade1 = TweenService:Create(titleLabel, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        TextTransparency = 1
+    })
+    local leftStarFade = TweenService:Create(leftStar, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        TextTransparency = 1
+    })
+    local rightStarFade = TweenService:Create(rightStar, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        TextTransparency = 1
+    })
+    local textFade2 = TweenService:Create(skullLabel, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        TextTransparency = 1
+    })
+    local strokeFade = TweenService:Create(titleStroke, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        Transparency = 1
+    })
+    
+    local panelFade = TweenService:Create(infoFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        BackgroundTransparency = 0.15
+    })
+    local strokeFadeIn = TweenService:Create(panelStroke, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        Transparency = 0.2
+    })
+    local infoTextFade = TweenService:Create(infoText, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        TextTransparency = 0
+    })
+    
+    fadeTween:Play()
+    containerFade:Play()
+    textFade1:Play()
+    leftStarFade:Play()
+    rightStarFade:Play()
+    textFade2:Play()
+    strokeFade:Play()
+    panelFade:Play()
+    strokeFadeIn:Play()
+    infoTextFade:Play()
+    
+    fadeTween.Completed:Connect(function()
+        titleContainer:Destroy()
+        skullLabel:Destroy()
+        rainFolder:Destroy()
+    end)
+    
+    task.spawn(function()
+        local t = 0
+        while screenGui.Parent do
+            t = t + RunService.RenderStepped:Wait() * 2
+            
+            local darkVal = math.floor(math.sin(t) * 20 + 70)
+            local lightVal = math.floor(math.cos(t) * 30 + 220)
+            infoGradient.Color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(darkVal, 0, 0)),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(lightVal, math.floor(lightVal * 0.3), math.floor(lightVal * 0.3)))
+            })
+            
+            strokeGradient.Rotation = (t * 40) % 360
+            textGradient.Rotation = (t * 20) % 360
+        end
+    end)
+    
+    task.spawn(function()
+        while screenGui.Parent do
+            local ping = 0
+            pcall(function()
+                ping = math.floor(player:GetNetworkPing() * 1000)
+            end)
+            
+            infoText.Text = string.format("玩家: %s | FPS: %d | Ping: %dms", player.Name, currentFps, ping)
+            task.wait(0.5)
+        end
+    end)
+end)
