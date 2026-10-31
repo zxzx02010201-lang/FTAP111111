@@ -1,0 +1,3532 @@
+
+local players = game:GetService("Players")
+local runService = game:GetService("RunService")
+local userInputService = game:GetService("UserInputService")
+local workspaceService = game:GetService("Workspace")
+local coreGui = game:GetService("CoreGui")
+local replicatedStorage = game:GetService("ReplicatedStorage")
+local localPlayer = players.LocalPlayer
+local currentCamera = workspaceService.CurrentCamera
+local heartbeat = runService.Heartbeat
+local orion20X = loadstring(game:HttpGet("https://raw.githubusercontent.com/BlizTBr/scripts/main/Orion%20X"))()
+
+local v1 = {
+  Home = "rbxassetid://7733960981",
+  User = "rbxassetid://7743875962",
+  Sword = "rbxassetid://10734975486",
+  Skull = "rbxassetid://7734058599",
+  Shield = "rbxassetid://7734056608",
+  Eye = "rbxassetid://7733655755",
+  Zap = "rbxassetid://7733655755",
+}
+
+local mituLang = getgenv and getgenv().MituLang or "en"
+
+local v2 = {
+  en = {
+    window = "mitu hub beta",
+    main = "Main",
+    player = "Player",
+    kick = "Kick",
+    kill = "Kill",
+    esp = "ESP",
+    defense = "Defense",
+    language = "Language",
+    select_player = "Select Player",
+    refresh = "Refresh List",
+    spawn_blob = "Spawn Blobman",
+    tip_kick = "Grab/Release + Lock = MAX",
+    walkspeed = "WalkSpeed",
+    jumppower = "JumpPower",
+    inf_jump = "Infinite Jump",
+    noclip = "Noclip",
+    third_person = "Third Person",
+    tp_distance = "TP Distance",
+    water_walk = "Water Walk",
+    fly = "Fly",
+    fly_speed = "Fly Speed",
+    spin = "Spin Character",
+    spin_speed = "Spin Speed",
+    wing = "Wing (Pallet Flap)",
+    flap_speed = "Flap Speed",
+    flap_power = "Flap Power",
+    max_strength = "MAX STRENGTH",
+    line_lag_sel = "Line Lag (Selected)",
+    line_lag_all = "Line Lag (Everyone)",
+    lag_intensity = "Lag Intensity",
+    no_blob_sel = "No Blob Kick (Selected)",
+    no_blob_all = "No Blob Kick (Everyone)",
+    blob_spam_sel = "Blob Spam (Selected)",
+    blob_spam_all = "Blob Spam (Everyone)",
+    drift_kick = "Drift Kick (Selected)",
+    drift_kick_all = "Drift Kick ALL (Air)",
+    drift_radius = "Drift Radius",
+    drift_speed = "Drift Speed",
+    drift_center = "Center Height",
+    drift_offset = "Height Offset",
+    drift_grabs = "Grab Drops",
+    drift_interval = "Grab Interval",
+    stop_drift = "Stop Drift",
+    stop_kick = "STOP ALL KICK",
+    kick_height = "Kick Height",
+    snowball = "Snowball (Ragdoll)",
+    pencil_kill = "Pencil Kill",
+    blob_kill = "Blob Kill",
+    antikick_breaker = "AntiKick Breaker",
+    break_gucci = "Break Gucci",
+    packet_lag = "Packet Lag (Everyone)",
+    packet_str = "Packet Lag Strength",
+    kill_sel = "Kill (Selected)",
+    kill_all = "Kill (Everyone)",
+    void_height = "Void Height",
+    stop_kill = "STOP KILL",
+    enable_esp = "Enable ESP",
+    esp_name = "ESP Name",
+    esp_dist = "ESP Distance",
+    esp_hl = "ESP Highlight",
+    fill_color = "Fill Color",
+    outline_color = "Outline Color",
+    fill_trans = "Fill Transparency",
+    outline_trans = "Outline Transparency",
+    anti_grab = "Anti Grab",
+    anti_fire = "Anti Fire",
+    anti_own = "Anti Ownership",
+    anti_kick = "Anti Kick",
+    anti_lag = "Anti Lag",
+    anti_snow = "Anti Snowball",
+    anti_banana = "Anti Banana",
+    anti_void = "Anti Void",
+    anti_paint = "Anti Paint",
+    lang_label = "UI Language",
+    lang_note = "Change language then re-execute",
+    loaded = "Loaded",
+    target = "Target",
+    err_select = "Select a player first",
+    stopped = "Stopped",
+  },
+  ja = {
+    window = "mitu hub beta",
+    main = "メイン",
+    player = "プレイヤー",
+    kick = "キック",
+    kill = "キル",
+    esp = "ESP",
+    defense = "防御",
+    language = "言語",
+    select_player = "プレイヤー選択",
+    refresh = "リスト更新",
+    spawn_blob = "Blobman出現",
+    tip_kick = "掴み離し＋固定 = 最大強度",
+    walkspeed = "歩行速度",
+    jumppower = "ジャンプ力",
+    inf_jump = "無限ジャンプ",
+    noclip = "ノークリップ",
+    third_person = "三人称",
+    tp_distance = "カメラ距離",
+    water_walk = "水上歩行",
+    fly = "フライ",
+    fly_speed = "フライ速度",
+    spin = "スピン",
+    spin_speed = "スピン速度",
+    wing = "羽（パレット）",
+    flap_speed = "羽ばたき速度",
+    flap_power = "羽ばたき威力",
+    max_strength = "最大強度",
+    line_lag_sel = "ラインラグ（選択）",
+    line_lag_all = "ラインラグ（全員）",
+    lag_intensity = "ラグ強度",
+    no_blob_sel = "No Blob キック（選択）",
+    no_blob_all = "No Blob キック（全員）",
+    blob_spam_sel = "Blob スパム（選択）",
+    blob_spam_all = "Blob スパム（全員）",
+    drift_kick = "ドリフトキック（選択）",
+    drift_kick_all = "ドリフトキック全員（空中）",
+    drift_radius = "半径",
+    drift_speed = "回転速度",
+    drift_center = "中心の高さ",
+    drift_offset = "高さオフセット",
+    drift_grabs = "掴み直し回数",
+    drift_interval = "掴み間隔",
+    stop_drift = "ドリフト停止",
+    stop_kick = "キック全停止",
+    kick_height = "キック高さ",
+    snowball = "雪玉（ラグドール）",
+    pencil_kill = "鉛筆キル",
+    blob_kill = "Blob キル",
+    antikick_breaker = "アンチキック潰し",
+    break_gucci = "Gucci破壊",
+    packet_lag = "パケットラグ（全員）",
+    packet_str = "パケットラグ強度",
+    kill_sel = "キル（選択）",
+    kill_all = "キル（全員）",
+    void_height = "奈落の高さ",
+    stop_kill = "キル停止",
+    enable_esp = "ESP 有効",
+    esp_name = "名前表示",
+    esp_dist = "距離表示",
+    esp_hl = "ハイライト",
+    fill_color = "塗り色",
+    outline_color = "枠色",
+    fill_trans = "塗り透明度",
+    outline_trans = "枠透明度",
+    anti_grab = "アンチグラブ",
+    anti_fire = "アンチファイア",
+    anti_own = "アンチオーナーシップ",
+    anti_kick = "アンチキック",
+    anti_lag = "アンチラグ",
+    anti_snow = "アンチ雪玉",
+    anti_banana = "アンチバナナ",
+    anti_void = "アンチ奈落",
+    anti_paint = "アンチペイント",
+    lang_label = "UI言語",
+    lang_note = "言語を変えたら再実行",
+    loaded = "読み込み完了",
+    target = "ターゲット",
+    err_select = "先にプレイヤーを選択",
+    stopped = "停止した",
+  },
+}
+
+local function f1(key)
+  return (v2[mituLang] or v2.en)[key] or v2.en[key] or key
+end
+
+local v3 = {
+  SelectedPlayer = nil,
+  WalkSpeed = 16,
+  JumpPower = 50,
+  InfiniteJump = false,
+  Noclip = false,
+  ThirdPerson = false,
+  ThirdPersonDistance = 12,
+  WaterWalk = false,
+  Fly = false,
+  FlySpeed = 50,
+  SpinChar = false,
+  SpinSpeed = 5,
+  Wing = false,
+  FlapSpeed = 8,
+  FlapPower = 90,
+  LineLag = false,
+  LineLagAll = false,
+  LagIntensity = 30,
+  KickHeight = 15,
+  NoBlobKick = false,
+  NoBlobKickAll = false,
+  BlobSpamKick = false,
+  BlobSpamKickAll = false,
+  SnowballRagdoll = false,
+  PencilKill = false,
+  BlobKill = false,
+  AntiKickBreaker = false,
+  PacketLag = false,
+  PacketLagStrength = 200,
+  KillSelected = false,
+  KillAll = false,
+  SeaY = -80,
+  AntiGrab = false,
+  AntiFire = false,
+  AntiOwnership = false,
+  AntiKick = false,
+  AntiLag = false,
+  AntiSnowball = false,
+  AntiBanana = false,
+  AntiVoid = false,
+  AntiPaint = false,
+  ESPEnabled = false,
+  ESPName = true,
+  ESPDistance = true,
+  ESPHighlight = true,
+  ESPFillColor = Color3.fromRGB(100, 180, 255),
+  ESPOutlineColor = Color3.fromRGB(255, 255, 255),
+  ESPFillTransparency = 0.65,
+  ESPOutlineTransparency = 0.25,
+}
+
+local grabEvents = replicatedStorage:FindFirstChild("GrabEvents")
+local createGrabLine = grabEvents and grabEvents:FindFirstChild("CreateGrabLine")
+local setNetworkOwner = grabEvents and grabEvents:FindFirstChild("SetNetworkOwner")
+local destroyGrabLine = grabEvents and grabEvents:FindFirstChild("DestroyGrabLine")
+local menuToys = replicatedStorage:FindFirstChild("MenuToys")
+local spawnToyRemoteFunction = menuToys and menuToys:FindFirstChild("SpawnToyRemoteFunction")
+local characterEvents = replicatedStorage:FindFirstChild("CharacterEvents")
+local struggle = characterEvents and characterEvents:FindFirstChild("Struggle")
+
+local stopAllVelocity = replicatedStorage:FindFirstChild("GameCorrectionEvents")
+  and replicatedStorage.GameCorrectionEvents:FindFirstChild("StopAllVelocity")
+
+local function f2(name, content)
+  orion20X:MakeNotification({
+    Name = name,
+    Content = content,
+    Image = v1.Zap,
+    Time = 3,
+  })
+end
+
+local function f3(p1)
+  local character = p1 and p1.Character
+
+  if not character then
+    return nil, nil, nil
+  end
+
+  return character, character:FindFirstChild("HumanoidRootPart"), character:FindFirstChildOfClass("Humanoid")
+end
+
+local function f4()
+  return v3.SelectedPlayer and players:FindFirstChild(v3.SelectedPlayer)
+end
+
+local function f5()
+  local v4 = {}
+
+  for index, value in ipairs(players:GetPlayers()) do
+    if value ~= localPlayer then
+      table.insert(v4, value)
+    end
+  end
+
+  return v4
+end
+
+local function f6(p2)
+  local creatureDrop
+
+  if not p2 then
+    return
+  else
+    local blobmanSeatAndOwnerScript = p2:FindFirstChild("BlobmanSeatAndOwnerScript")
+
+    creatureDrop = blobmanSeatAndOwnerScript
+      and blobmanSeatAndOwnerScript:FindFirstChild("CreatureDrop")
+
+    if not creatureDrop then
+      return
+    else
+      local count = 0
+
+      while true do
+        count = 1 + count
+
+        if not (count <= 32) then
+          break
+        end
+
+        for index2, value2 in ipairs({ "Left", "Right" }) do
+          local findFirstChild = p2:FindFirstChild(value2 .. "Detector")
+
+          local findFirstChild2 = findFirstChild
+            and (findFirstChild:FindFirstChild(value2 .. "Weld")
+              or findFirstChild:FindFirstChildWhichIsA("Weld"))
+
+          if findFirstChild2 then
+            pcall(function() creatureDrop:FireServer(findFirstChild2) end)
+          end
+        end
+      end
+
+      return
+    end
+  end
+end
+
+local function f7(p3)
+  local v5 = not p3 or p3 == localPlayer
+  local v6, head, v7
+
+  if v5 then
+    return
+  else
+    local v8, v9
+    v9, v6, v8 = f3(p3)
+
+    if not v6 then
+      return
+    end
+
+    head = p3.Character:FindFirstChild("Head")
+    v7 = v6.CFrame * CFrame.new(0, v3.KickHeight, 0)
+
+    if createGrabLine then
+      for i = 1, v3.LagIntensity do
+        pcall(function()
+          if head then
+            createGrabLine:FireServer(head, CFrame.new(), v7)
+          else
+            createGrabLine:FireServer(v6, CFrame.new(), v7)
+          end
+        end)
+      end
+    end
+
+    if setNetworkOwner then
+      for j = 1, 24 do
+        pcall(function() setNetworkOwner:FireServer(v6, v7) end)
+      end
+    end
+
+    if v8 then
+      v8.PlatformStand = true
+      v8.Sit = true
+    end
+
+    pcall(function()
+      v6.Velocity = Vector3.new(math.random(-80, 80), 200, math.random(-80, 80))
+
+      if v6.AssemblyLinearVelocity then
+        v6.AssemblyLinearVelocity = Vector3.new(math.random(-80, 80), 220, math.random(-80, 80))
+      end
+    end)
+
+    return
+  end
+end
+
+local function f8(p4)
+  if not spawnToyRemoteFunction then
+    return nil
+  end
+
+  local v10
+  v185, v10 = f3(p4)
+
+  if not v10 then
+    return nil
+  else
+    local findFirstChild3 = workspaceService:FindFirstChild(localPlayer.Name .. "SpawnedInToys")
+    local v11 = {}
+
+    if findFirstChild3 then
+      for index3, value3 in ipairs(findFirstChild3:GetChildren()) do
+        v11[value3] = true
+      end
+    end
+
+    pcall(function()
+      spawnToyRemoteFunction:InvokeServer(
+        "PalletLightBrown", v10.CFrame * CFrame.new(0, -3.5, 0), Vector3.zero
+      )
+    end)
+
+    task.wait(0.1)
+
+    if not findFirstChild3 then
+      findFirstChild3 = workspaceService:FindFirstChild(localPlayer.Name .. "SpawnedInToys")
+    end
+
+    if findFirstChild3 then
+      for index4, value4 in ipairs(findFirstChild3:GetChildren()) do
+        if not v11[value4] and string.find(string.lower(value4.Name), "pallet") then
+          return value4
+        end
+      end
+
+      return nil
+    end
+
+    return nil
+  end
+end
+
+local function f9()
+  local findFirstChild4 = workspaceService:FindFirstChild(localPlayer.Name .. "SpawnedInToys")
+  return findFirstChild4 and findFirstChild4:FindFirstChild("CreatureBlobman")
+end
+
+local function f10(p5, p6)
+  if not p5 or not p6 then
+    return
+  end
+
+  local v12
+  v205, v12 = f3(p6)
+
+  if not v12 then
+    return
+  else
+    local primaryPart = p5.PrimaryPart or p5:FindFirstChildWhichIsA("BasePart")
+
+    if not primaryPart then
+      return
+    else
+      local v13 = -1
+
+      while true do
+        v13 = 1 + v13
+
+        if not (v13 <= 20) then
+          break
+        end
+
+        local v14 = v13
+
+        if not p5.Parent then
+          break
+        end
+
+        v211, v12 = f3(p6)
+
+        if not v12 then
+          break
+        else
+          local cframe = CFrame.new(
+            v12.Position.X, v12.Position.Y + (-3.2 + 25 * (v14 / 20)), v12.Position.Z
+          )
+
+          pcall(function()
+            p5:PivotTo(cframe)
+            primaryPart.CFrame = cframe
+            primaryPart.AssemblyLinearVelocity = Vector3.new(0, 120, 0)
+          end)
+
+          if setNetworkOwner then
+            local count2 = 0
+
+            while true do
+              count2 = 1 + count2
+
+              if not (6 >= count2) then
+                break
+              end
+
+              pcall(function() setNetworkOwner:FireServer(primaryPart, cframe) end)
+              pcall(function() setNetworkOwner:FireServer(v12, v12.CFrame) end)
+            end
+          end
+
+          f7(p6)
+          task.wait(0.02)
+        end
+      end
+
+      return
+    end
+  end
+end
+
+local connect
+
+local function f11()
+  if connect then
+    return
+  end
+
+  connect = heartbeat:Connect(function()
+    if not (v3.LineLag or v3.LineLagAll or v3.NoBlobKick or v3.NoBlobKickAll or v3.KillSelected
+      or v3.KillAll or v3.BlobSpamKick or v3.BlobSpamKickAll) then
+      return
+    end
+
+    if v3.LineLag or v3.NoBlobKick or v3.KillSelected or v3.BlobSpamKick then
+      local v15 = f4()
+
+      if v15 then
+        f7(v15)
+      end
+    end
+
+    if v3.LineLagAll or v3.NoBlobKickAll or v3.KillAll or v3.BlobSpamKickAll then
+      for index5, value5 in ipairs(f5()) do
+        f7(value5)
+      end
+    end
+  end)
+end
+
+local v16 = nil
+
+local function f12()
+  v3.NoBlobKick = false
+
+  if v16 then
+    task.cancel(v16)
+    v16 = nil
+  end
+end
+
+local function f13(value6)
+  local v17
+
+  if not value6 then
+    return
+  else
+    local v18, v19, v20 = f3(value6)
+
+    if not v19 or not v20 or v20.Health <= 0 then
+      return
+    else
+      local count3 = 0
+
+      while true do
+        count3 = 1 + count3
+
+        if not (5 >= count3) then
+          break
+        end
+
+        f7(value6)
+      end
+
+      v17 = f8(value6)
+
+      for k = 1, 5 do
+        f7(value6)
+      end
+
+      if v17 then
+        f10(v17, value6)
+      end
+
+      if v20 then
+        v20.PlatformStand = true
+        v20.Sit = true
+      end
+
+      v19.Velocity = Vector3.new(math.random(-100, 100), 250, math.random(-100, 100))
+
+      for m = 1, 12 do
+        f7(value6)
+        task.wait(0.015)
+      end
+
+      task.delay(1, function()
+        if v17 and v17.Parent then
+          pcall(function() v17:Destroy() end)
+        end
+      end)
+
+      return
+    end
+  end
+end
+
+local function f14()
+  if v16 then
+    return
+  end
+
+  f11()
+
+  v16 = task.spawn(function()
+    while v3.NoBlobKick do
+      local v21 = f4()
+
+      if v21 then
+        f13(v21)
+      end
+
+      task.wait(0.2)
+    end
+
+    v16 = nil
+  end)
+end
+
+local v22
+
+local function f15()
+  if v22 then
+    return
+  end
+
+  f11()
+
+  v22 = task.spawn(function()
+    while v3.NoBlobKickAll do
+      for index6, value7 in ipairs(f5()) do
+        f13(value7)
+        task.wait(0.03)
+      end
+
+      task.wait(0.25)
+    end
+
+    v22 = nil
+  end)
+end
+
+local function f16()
+  v3.NoBlobKickAll = false
+
+  if v22 then
+    task.cancel(v22)
+    v22 = nil
+  end
+end
+
+local v23 = 1
+
+local function f17(value8, p7)
+  if not value8 or not p7 then
+    return
+  end
+
+  local v24
+  v269, v24 = f3(value8)
+  local creatureGrab
+
+  if not v24 then
+    return
+  else
+    local blobmanSeatAndOwnerScript2 = p7:FindFirstChild("BlobmanSeatAndOwnerScript")
+
+    creatureGrab = blobmanSeatAndOwnerScript2
+      and blobmanSeatAndOwnerScript2:FindFirstChild("CreatureGrab")
+
+    if not creatureGrab then
+      return
+    end
+
+    for n = 1, 32 do
+      if v23 == 1 then
+        local leftDetector = p7:FindFirstChild("LeftDetector")
+        local leftWeld = leftDetector and leftDetector:FindFirstChild("LeftWeld")
+
+        if leftDetector and leftWeld then
+          pcall(function() creatureGrab:FireServer(leftDetector, v24, leftWeld) end)
+        end
+
+        v23 = 2
+      else
+        local rightDetector = p7:FindFirstChild("RightDetector")
+        local rightWeld = rightDetector and rightDetector:FindFirstChild("RightWeld")
+
+        if rightDetector and rightWeld then
+          pcall(function() creatureGrab:FireServer(rightDetector, v24, rightWeld) end)
+        end
+
+        v23 = 1
+      end
+    end
+
+    f7(value8)
+    return
+  end
+end
+
+local v25
+
+local function f18()
+  v3.BlobSpamKick = false
+
+  if v25 then
+    task.cancel(v25)
+    v25 = nil
+  end
+end
+
+local function f19()
+  if v25 then
+    return
+  end
+
+  f11()
+
+  v25 = task.spawn(function()
+    while v3.BlobSpamKick do
+      local v26 = f4()
+      local v27 = f9()
+
+      if v26 and v27 then
+        f17(v26, v27)
+        f6(v27)
+        f7(v26)
+      end
+
+      heartbeat:Wait()
+    end
+
+    v25 = nil
+  end)
+end
+
+local v28
+
+local function f20()
+  if v28 then
+    return
+  end
+
+  f11()
+
+  v28 = task.spawn(function()
+    while v3.BlobSpamKickAll do
+      local v29 = f9()
+
+      if v29 then
+        for index7, value9 in ipairs(f5()) do
+          f17(value9, v29)
+          f6(v29)
+          f7(value9)
+        end
+      end
+
+      heartbeat:Wait()
+    end
+
+    v28 = nil
+  end)
+end
+
+local function f21()
+  v3.BlobSpamKickAll = false
+
+  if v28 then
+    task.cancel(v28)
+    v28 = nil
+  end
+end
+
+local function f22(p8)
+  local vehicleSeat = p8:FindFirstChild("VehicleSeat")
+
+  local humanoid = localPlayer.Character
+    and localPlayer.Character:FindFirstChildOfClass("Humanoid")
+
+  local humanoidRootPart = localPlayer.Character
+    and localPlayer.Character:FindFirstChild("HumanoidRootPart")
+
+  if not vehicleSeat or not humanoid or not humanoidRootPart then
+    return false
+  end
+
+  if vehicleSeat.Occupant == humanoid then
+    return true
+  end
+
+  humanoidRootPart.CFrame = vehicleSeat.CFrame + Vector3.new(0, 2, 0)
+  task.wait(0.2)
+  vehicleSeat:Sit(humanoid)
+  task.wait(0.5)
+  return true
+end
+
+local function f23(p9)
+  local blobmanSeatAndOwnerScript3 = p9:FindFirstChild("BlobmanSeatAndOwnerScript")
+    or p9:FindFirstChild("BlobmanSeatAndOwnerScript[old]")
+
+  local creatureGrab2 = blobmanSeatAndOwnerScript3
+      and blobmanSeatAndOwnerScript3:FindFirstChild("CreatureGrab")
+    or p9:FindFirstChild("CreatureGrab", true)
+
+  local creatureDrop2 = blobmanSeatAndOwnerScript3
+      and blobmanSeatAndOwnerScript3:FindFirstChild("CreatureDrop")
+    or p9:FindFirstChild("CreatureDrop", true)
+
+  local leftDetector2 = p9:FindFirstChild("LeftDetector")
+  local rightDetector2 = p9:FindFirstChild("RightDetector")
+
+  local function f24(p10, p11)
+    if not p10 then
+      return nil
+    end
+
+    return p10:FindFirstChild(p11 .. "Weld") or p10:FindFirstChildWhichIsA("Weld")
+      or p10:FindFirstChildWhichIsA("JointInstance") or p10:FindFirstChild("RigidConstraint")
+  end
+
+  return creatureGrab2, creatureDrop2, leftDetector2, rightDetector2, f24(leftDetector2, "Left"), f24(rightDetector2, "Right")
+end
+
+local function f25()
+  local findFirstChild5 = workspaceService:FindFirstChild(localPlayer.Name .. "SpawnedInToys")
+  local creatureBlobman = findFirstChild5 and findFirstChild5:FindFirstChild("CreatureBlobman")
+  local cframe2
+
+  if creatureBlobman then
+    return creatureBlobman
+  elseif spawnToyRemoteFunction then
+    local v30, v31 = f3(localPlayer)
+    cframe2 = v31 and v31.CFrame + Vector3.new(0, 5, 0) or CFrame.new(0, 50, 0)
+
+    pcall(function()
+      spawnToyRemoteFunction:InvokeServer("CreatureBlobman", cframe2, Vector3.zero)
+    end)
+
+    task.wait(0.8)
+    local findFirstChild6 = workspaceService:FindFirstChild(localPlayer.Name .. "SpawnedInToys")
+
+    local creatureBlobman2 = findFirstChild6
+      and findFirstChild6:FindFirstChild("CreatureBlobman")
+
+    if creatureBlobman2 then
+      return creatureBlobman2
+    end
+
+    for index8, value10 in ipairs(workspaceService:GetChildren()) do
+      if value10.Name == "CreatureBlobman" and value10:FindFirstChild("VehicleSeat") then
+        return value10
+      end
+    end
+
+    return nil
+  else
+    for index9, value11 in ipairs(workspaceService:GetChildren()) do
+      if value11.Name == "CreatureBlobman" and value11:FindFirstChild("VehicleSeat") then
+        return value11
+      end
+    end
+
+    return nil
+  end
+end
+
+local v32 = {
+  Running = false,
+  RunningAll = false,
+  LoopId = 0,
+  Radius = 19,
+  Speed = 12,
+  HeightOffset = 0,
+  CenterHeight = 40,
+  GrabCount = 2,
+  GrabInterval = 0.8,
+  Angle = 0,
+}
+
+local function f26()
+  v32.Running = false
+  v32.RunningAll = false
+  v32.LoopId = v32.LoopId + 1
+end
+
+local function f27()
+  f26()
+
+  v32.RunningAll = true
+  v32.LoopId = v32.LoopId + 1
+
+  local loopId = v32.LoopId
+  local v33 = f25()
+  local v34, v35, v36, v37
+
+  if not v33 then
+    f2("Drift All", "Blobman failed")
+    v32.RunningAll = false
+    return
+  else
+    f22(v33)
+    local v38, v39, v40, v41
+    v35, v34, v40, v38, v39, v41 = f23(v33)
+    local v42 = v38 or v40
+    local v43 = v41 or v39
+    v36 = v42
+    v37 = v43
+
+    if not (v35 and v34 and v36 and v37) then
+      if v40 and v39 then
+        v36 = v40
+        v37 = v39
+      end
+
+      if v38 and v41 then
+        v36 = v38
+        v37 = v41
+      end
+    end
+
+    if not (v35 and v34 and v36 and v37) then
+      f2("Drift All", "Remote missing")
+      v32.RunningAll = false
+      return
+    end
+
+    f2("Drift All", "全員空中キック")
+
+    task.spawn(function()
+      local humanoidRootPart2 = v33:FindFirstChild("HumanoidRootPart") or v33.PrimaryPart
+
+      if not humanoidRootPart2 then
+        v32.RunningAll = false
+        return
+      else
+        local v44, v45 = f3(localPlayer)
+        local position = v45 and v45.Position or Vector3.new(0, 20, 0)
+        local vector = Vector3.new(position.X, math.max(v32.CenterHeight, 35), position.Z)
+        local v46 = 1
+        local v47 = tick()
+        local v48 = tick()
+
+        while v32.RunningAll and loopId == v32.LoopId and v33.Parent do
+          local v49 = {}
+
+          for index10, value12 in ipairs(f5()) do
+            local character2 = value12.Character
+
+            local humanoidRootPart3 = character2
+
+            humanoidRootPart3 = character2
+              and value12.Character:FindFirstChild("HumanoidRootPart")
+
+            local character3 = value12.Character
+
+            local humanoid2 = character3
+            humanoid2 = character3 and value12.Character:FindFirstChildOfClass("Humanoid")
+
+            if humanoidRootPart3 and humanoid2 and humanoid2.Health > 0 then
+              table.insert(v49, { plr = value12, root = humanoidRootPart3, hum = humanoid2 })
+            end
+          end
+
+          if #v49 == 0 then
+            heartbeat:Wait()
+          else
+            local v50 = tick()
+            v32.Angle = v32.Angle + v32.Speed * (v50 - v47)
+            v47 = v50
+            local v51 = #v49
+
+            for index11, value13 in ipairs(v49) do
+              local v52 = value13
+              local v53 = v32.Angle + (index11 - 1) / v51 * math.pi * 2
+              local v54 = math.cos(v53)
+              local v55 = math.sin(v53)
+              local vector2 = Vector3.new(v54 * v32.Radius, v32.HeightOffset, v55 * v32.Radius)
+              local cframe3 = CFrame.new(vector + vector2)
+
+              pcall(function()
+                v52.root.CFrame = cframe3
+                v52.root.AssemblyLinearVelocity = Vector3.zero
+                v52.root.Velocity = Vector3.zero
+                v52.hum.PlatformStand = true
+                v52.hum.Sit = true
+              end)
+
+              if setNetworkOwner then
+                for i6 = 1, 6 do
+                  pcall(function() setNetworkOwner:FireServer(v52.root, cframe3) end)
+                end
+              end
+
+              if createGrabLine then
+                for i7 = 1, 8 do
+                  pcall(function() createGrabLine:FireServer(v52.root, CFrame.new(), cframe3) end)
+                end
+              end
+            end
+
+            if v46 > #v49 then
+              v46 = 1
+            end
+
+            local v56 = v49[v46]
+
+            if v56 and v56.root and v56.root.Parent then
+              local root = v56.root
+
+              humanoidRootPart2.CFrame = root.CFrame
+              humanoidRootPart2.AssemblyLinearVelocity = Vector3.zero
+
+              local count4 = 0
+
+              while true do
+                count4 = 1 + count4
+
+                if not (24 >= count4) then
+                  break
+                end
+
+                pcall(function()
+                  v35:FireServer(v36, root, v37)
+
+                  if createGrabLine then
+                    createGrabLine:FireServer(root, Vector3.zero, root.Position, false)
+                  end
+
+                  if setNetworkOwner then
+                    setNetworkOwner:FireServer(root, humanoidRootPart2.CFrame)
+                  end
+                end)
+              end
+
+              task.wait(0.05)
+              local count5 = 0
+
+              while true do
+                count5 = 1 + count5
+
+                if not (count5 <= 24) then
+                  break
+                end
+
+                pcall(function()
+                  local rightWeld2 = v36:FindFirstChild("RightWeld")
+                    or v36:FindFirstChild("LeftWeld") or v36:FindFirstChildWhichIsA("Weld")
+                    or v37
+
+                  if rightWeld2 then
+                    v34:FireServer(rightWeld2)
+                  end
+
+                  if destroyGrabLine then
+                    destroyGrabLine:FireServer(root)
+                  end
+                end)
+              end
+
+              for i8 = 1, 16 do
+                pcall(function()
+                  v35:FireServer(v36, root, v37)
+
+                  if createGrabLine then
+                    createGrabLine:FireServer(root, Vector3.zero, root.Position, false)
+                  end
+
+                  if setNetworkOwner then
+                    setNetworkOwner:FireServer(
+                      root, CFrame.new(root.Position + Vector3.new(0, 8, 0))
+                    )
+                  end
+                end)
+              end
+
+              pcall(function()
+                root.AssemblyLinearVelocity = Vector3.new(
+                  math.random(-120, 120), math.random(80, 180), math.random(-120, 120)
+                )
+
+                root.Velocity = root.AssemblyLinearVelocity
+              end)
+
+              f7(v56.plr)
+            end
+
+            if tick() - v48 >= math.max(0.12, v32.GrabInterval * 0.4) then
+              v46 = v46 + 1
+              v48 = tick()
+            end
+
+            heartbeat:Wait()
+          end
+        end
+
+        v32.RunningAll = false
+        return
+      end
+    end)
+
+    return
+  end
+end
+
+local function f28(p12)
+  if not p12 or not spawnToyRemoteFunction then
+    return
+  end
+
+  local v57
+  v455, v57 = f3(p12)
+
+  if not v57 then
+    return
+  else
+    pcall(function()
+      spawnToyRemoteFunction:InvokeServer(
+        "BallSnowball", v57.CFrame * CFrame.new(0, 3, 0), Vector3.zero
+      )
+    end)
+
+    local count6 = 0
+
+    while true do
+      count6 = 1 + count6
+
+      if not (12 >= count6) then
+        break
+      end
+
+      f7(p12)
+      task.wait(0.02)
+    end
+
+    return
+  end
+end
+
+local function f29()
+  local v58 = f4()
+
+  if not v58 or v58 == localPlayer then
+    f2("Drift", f1("err_select"))
+    return
+  end
+
+  f26()
+
+  v32.Running = true
+  v32.LoopId = v32.LoopId + 1
+
+  local loopId2 = v32.LoopId
+  local v59 = f25()
+  local v60, v61, v62, v63
+
+  if not v59 then
+    f2("Drift", "Blobman failed")
+    v32.Running = false
+    return
+  else
+    f22(v59)
+    local v64, v65, v66, v67
+    v63, v61, v66, v64, v67, v65 = f23(v59)
+    v60 = v64 or v66
+    v62 = v65 or v67
+
+    if not (v63 and v61 and v60 and v62) then
+      f2("Drift", "Remote missing")
+      v32.Running = false
+      return
+    end
+
+    f2("Drift", "Start → " .. v58.Name)
+
+    task.spawn(function()
+      local humanoidRootPart4 = v59:FindFirstChild("HumanoidRootPart") or v59.PrimaryPart
+
+      if not humanoidRootPart4 then
+        v32.Running = false
+        return
+      end
+
+      local v68
+
+      while v32.Running and loopId2 == v32.LoopId do
+        if not v58.Parent then
+          break
+        else
+          local humanoidRootPart5 = v58.Character
+            and v58.Character:FindFirstChild("HumanoidRootPart")
+
+          local humanoid3 = v58.Character and v58.Character:FindFirstChildOfClass("Humanoid")
+
+          if not (humanoidRootPart5 and humanoid3 and humanoid3.Health > 0) then
+            heartbeat:Wait()
+          else
+            local v69 = tick()
+
+            while tick() - v69 < 0.35 do
+              local v70 = not v32.Running
+              local v71 = v70
+
+              if not v70 then
+                v70 = loopId2 ~= v32.LoopId or not v59.Parent
+                v71 = v70
+              end
+
+              if v71 then
+                break
+              else
+                local humanoidRootPart6 = v58.Character
+                  and v58.Character:FindFirstChild("HumanoidRootPart")
+
+                if humanoidRootPart6 then
+                  humanoidRootPart4.CFrame = humanoidRootPart6.CFrame
+                  humanoidRootPart4.AssemblyLinearVelocity = Vector3.zero
+
+                  pcall(function()
+                    v63:FireServer(v60, humanoidRootPart6, v62)
+
+                    if createGrabLine then
+                      createGrabLine:FireServer(
+                        humanoidRootPart6, Vector3.zero, humanoidRootPart6.Position, false
+                      )
+                    end
+
+                    if setNetworkOwner then
+                      setNetworkOwner:FireServer(humanoidRootPart6, humanoidRootPart4.CFrame)
+                    end
+                  end)
+                end
+
+                heartbeat:Wait()
+              end
+            end
+
+            if not v32.Running or loopId2 ~= v32.LoopId then
+              break
+            end
+
+            humanoidRootPart5 = v58.Character
+              and v58.Character:FindFirstChild("HumanoidRootPart")
+
+            humanoid3 = v58.Character and v58.Character:FindFirstChildOfClass("Humanoid")
+
+            if humanoidRootPart5 and humanoid3 and humanoid3.Health > 0 then
+              local cframe4 = humanoidRootPart5.CFrame
+              v68 = cframe4 + Vector3.new(0, v32.CenterHeight, 0)
+              local v72 = tick()
+              local v73 = tick()
+              local v74 = v72
+              local count7 = 0
+
+              while v32.Running and loopId2 == v32.LoopId and v59.Parent do
+                if not v58.Parent then
+                  break
+                end
+
+                humanoidRootPart5 = v58.Character
+                  and v58.Character:FindFirstChild("HumanoidRootPart")
+
+                humanoid3 = v58.Character and v58.Character:FindFirstChildOfClass("Humanoid")
+
+                if not (humanoidRootPart5 and humanoid3 and humanoid3.Health > 0) then
+                  break
+                end
+
+                if count7 < v32.GrabCount and tick() - v73 > v32.GrabInterval then
+                  count7 = count7 + 1
+                  local count8 = 0
+
+                  while true do
+                    count8 = 1 + count8
+
+                    if not (count8 <= 20) then
+                      break
+                    end
+
+                    pcall(function()
+                      local rightWeld3 = v60:FindFirstChild("RightWeld")
+                        or v60:FindFirstChild("LeftWeld") or v60:FindFirstChildWhichIsA("Weld")
+                        or v62
+
+                      if rightWeld3 then
+                        v61:FireServer(rightWeld3)
+                      end
+
+                      if destroyGrabLine then
+                        destroyGrabLine:FireServer(humanoidRootPart5)
+                      end
+                    end)
+                  end
+
+                  humanoidRootPart4.CFrame = cframe4
+                  heartbeat:Wait()
+
+                  local humanoidRootPart7 = v58.Character
+                    and v58.Character:FindFirstChild("HumanoidRootPart")
+
+                  if humanoidRootPart7 then
+                    humanoidRootPart4.CFrame = humanoidRootPart7.CFrame
+
+                    for i9 = 1, 20 do
+                      pcall(function()
+                        v63:FireServer(v60, humanoidRootPart7, v62)
+
+                        if createGrabLine then
+                          createGrabLine:FireServer(
+                            humanoidRootPart7, Vector3.zero, humanoidRootPart7.Position, false
+                          )
+                        end
+
+                        if setNetworkOwner then
+                          setNetworkOwner:FireServer(
+                            humanoidRootPart7, humanoidRootPart4.CFrame
+                          )
+                        end
+                      end)
+                    end
+                  end
+
+                  local v75 = tick()
+                  v73 = tick()
+                  v74 = v75
+                else
+                  local v76 = tick()
+                  local v77 = v76 - v74
+                  v74 = v76
+                  v32.Angle = v32.Angle + v32.Speed * v77
+                  local v78 = math.cos(v32.Angle)
+                  local v79 = math.sin(v32.Angle)
+
+                  local vector3 = Vector3.new(
+                    v78 * v32.Radius, v32.HeightOffset, v79 * v32.Radius
+                  )
+
+                  humanoidRootPart4.CFrame = CFrame.new(v68.Position + vector3, v68.Position)
+                  humanoidRootPart4.AssemblyLinearVelocity = Vector3.zero
+
+                  humanoidRootPart5.CFrame = v68
+                  humanoidRootPart5.AssemblyLinearVelocity = Vector3.zero
+
+                  pcall(function()
+                    humanoid3.PlatformStand = true
+                    humanoid3.Sit = true
+
+                    if setNetworkOwner then
+                      setNetworkOwner:FireServer(humanoidRootPart5, v68)
+                    end
+
+                    local rightWeld4 = v60:FindFirstChild("RightWeld")
+                      or v60:FindFirstChild("LeftWeld") or v60:FindFirstChildWhichIsA("Weld")
+
+                    if rightWeld4 then
+                      v61:FireServer(rightWeld4)
+                    end
+
+                    if destroyGrabLine then
+                      destroyGrabLine:FireServer(humanoidRootPart5)
+                    end
+
+                    v63:FireServer(v60, humanoidRootPart5, v62)
+
+                    if createGrabLine then
+                      createGrabLine:FireServer(
+                        humanoidRootPart5, Vector3.zero, v68.Position, false
+                      )
+                    end
+                  end)
+
+                  heartbeat:Wait()
+                end
+              end
+
+              break
+            end
+          end
+        end
+      end
+
+      v32.Running = false
+    end)
+
+    return
+  end
+end
+
+local function f30(p13)
+  local v80 = f9() or f25()
+  local v81, v82, v83, v84, v85, v86
+
+  if not v80 or not p13 then
+    return
+  else
+    f22(v80)
+    local v87, v88, v89, v90
+    v85, v82, v90, v87, v88, v89 = f23(v80)
+    v81 = v87 or v90
+    v83 = v89 or v88
+
+    if not (v85 and v81 and v83) then
+      return
+    end
+
+    v605, v86, v84 = f3(p13)
+
+    if not v86 then
+      return
+    else
+      local humanoidRootPart8 = v80:FindFirstChild("HumanoidRootPart") or v80.PrimaryPart
+
+      if humanoidRootPart8 then
+        humanoidRootPart8.CFrame = v86.CFrame
+      end
+
+      for i10 = 1, 30 do
+        pcall(function() v85:FireServer(v81, v86, v83) end)
+        f7(p13)
+      end
+
+      task.wait(0.05)
+
+      if v82 then
+        for i11 = 1, 20 do
+          pcall(function()
+            local weld = v81:FindFirstChildWhichIsA("Weld") or v83
+
+            if weld then
+              v82:FireServer(weld)
+            end
+          end)
+        end
+      end
+
+      pcall(function()
+        v86.CFrame = CFrame.new(v86.Position.X, v3.SeaY, v86.Position.Z)
+        v86.AssemblyLinearVelocity = Vector3.new(0, -500, 0)
+
+        if v84 then
+          v84.PlatformStand = true
+        end
+      end)
+
+      f7(p13)
+      return
+    end
+  end
+end
+
+local v91 = nil
+
+local function f31()
+  if v91 then
+    return
+  end
+
+  v91 = task.spawn(function()
+    while v3.SnowballRagdoll do
+      local v92 = f4()
+
+      if v92 then
+        f28(v92)
+      end
+
+      task.wait(0.35)
+    end
+
+    v91 = nil
+  end)
+end
+
+local v93 = nil
+
+local function f32()
+  if v93 then
+    return
+  end
+
+  v93 = task.spawn(function()
+    while v3.AntiKickBreaker do
+      local v94 = f4()
+
+      if v94 then
+        for i12 = 1, 15 do
+          f7(v94)
+        end
+      end
+
+      task.wait(0.1)
+    end
+
+    v93 = nil
+  end)
+end
+
+local function f33(p14)
+  if not p14 or not spawnToyRemoteFunction then
+    return
+  end
+
+  local v95
+  v627, v95 = f3(p14)
+
+  if not v95 then
+    return
+  end
+
+  local cframe5 = (p14.Character and p14.Character:FindFirstChild("Head") or v95).CFrame
+
+  for index12, value14 in ipairs({ "Pencil", "ToyPencil", "WritingPencil" }) do
+    local v96 = value14
+    pcall(function() spawnToyRemoteFunction:InvokeServer(v96, cframe5, Vector3.zero) end)
+  end
+
+  for i13 = 1, 20 do
+    f7(p14)
+
+    if setNetworkOwner then
+      pcall(function() setNetworkOwner:FireServer(v95, CFrame.new(0, v3.SeaY, 0)) end)
+    end
+
+    task.wait(0.02)
+  end
+end
+
+local v97 = nil
+
+local function f34()
+  if v97 then
+    return
+  end
+
+  v97 = task.spawn(function()
+    while v3.PencilKill do
+      local v98 = f4()
+
+      if v98 then
+        f33(v98)
+      end
+
+      task.wait(0.4)
+    end
+
+    v97 = nil
+  end)
+end
+
+local v99 = nil
+
+local function f35()
+  v3.KillSelected = false
+
+  if v99 then
+    task.cancel(v99)
+    v99 = nil
+  end
+end
+
+local v100
+
+local function f36()
+  if v100 then
+    return
+  end
+
+  v100 = task.spawn(function()
+    while v3.BlobKill do
+      local v101 = f4()
+
+      if v101 then
+        f30(v101)
+      end
+
+      task.wait(0.25)
+    end
+
+    v100 = nil
+  end)
+end
+
+local connect2
+
+local function f37()
+  if connect2 then
+    return
+  end
+
+  connect2 = heartbeat:Connect(function()
+    if not v3.PacketLag then
+      return
+    end
+
+    for index13, value15 in ipairs(f5()) do
+      local v102
+      v681, v102 = f3(value15)
+
+      if v102 and createGrabLine then
+        local v103 = math.min(v3.PacketLagStrength / 20, 40)
+        local count9 = 0
+
+        while true do
+          count9 = 1 + count9
+
+          if not (count9 <= v103) then
+            break
+          end
+
+          pcall(function()
+            createGrabLine:FireServer(v102, CFrame.new(), v102.CFrame * CFrame.new(
+              math.random(-5, 5), math.random(5, 20), math.random(-5, 5)
+            ))
+          end)
+        end
+      end
+
+      if v102 and setNetworkOwner then
+        local count10 = 0
+
+        while true do
+          count10 = 1 + count10
+
+          if not (count10 <= 8) then
+            break
+          end
+
+          pcall(function() setNetworkOwner:FireServer(v102, v102.CFrame) end)
+        end
+      end
+    end
+  end)
+end
+
+local f38
+
+local function f39()
+  if v99 then
+    return
+  end
+
+  f11()
+
+  v99 = task.spawn(function()
+    while v3.KillSelected do
+      local v104 = f4()
+
+      if v104 then
+        f38(v104)
+      end
+
+      task.wait(0.15)
+    end
+
+    v99 = nil
+  end)
+end
+
+function f38(p15)
+  local v105
+
+  if not p15 then
+    return
+  else
+    local v106, v107
+    v107, v105, v106 = f3(p15)
+
+    if not v105 or not v106 or v106.Health <= 0 then
+      return
+    else
+      local count11 = 0
+
+      while true do
+        count11 = 1 + count11
+
+        if not (15 >= count11) then
+          break
+        end
+
+        f7(p15)
+
+        if setNetworkOwner then
+          local count12 = 0
+
+          while true do
+            count12 = 1 + count12
+
+            if not (8 >= count12) then
+              break
+            end
+
+            pcall(function() setNetworkOwner:FireServer(v105, CFrame.new(0, v3.SeaY, 0)) end)
+          end
+        end
+
+        pcall(function()
+          v105.CFrame = CFrame.new(v105.Position.X, v3.SeaY, v105.Position.Z)
+          v105.Velocity = Vector3.new(0, -400, 0)
+        end)
+
+        if v106 then
+          v106.PlatformStand = true
+          v106.Sit = true
+        end
+
+        task.wait(0.01)
+      end
+
+      return
+    end
+  end
+end
+
+local v108
+
+local function f40()
+  v3.KillAll = false
+
+  if v108 then
+    task.cancel(v108)
+    v108 = nil
+  end
+end
+
+local function f41()
+  if v108 then
+    return
+  end
+
+  f11()
+
+  v108 = task.spawn(function()
+    while v3.KillAll do
+      for index14, value16 in ipairs(f5()) do
+        f38(value16)
+        task.wait(0.02)
+      end
+
+      task.wait(0.2)
+    end
+
+    v108 = nil
+  end)
+end
+
+local v109 = {}
+local mituESP
+
+local function makeTextLabel(value17)
+  if not v3.ESPEnabled or not mituESP or value17 == localPlayer then
+    return
+  end
+
+  if mituESP:FindFirstChild(value17.Name) or mituESP:FindFirstChild("HL_" .. value17.Name) then
+    return
+  else
+    local character4 = value17.Character
+
+    if not character4 then
+      return
+    else
+      local head2 = character4:FindFirstChild("Head")
+        or character4:FindFirstChild("HumanoidRootPart")
+
+-- https://discord.gg/AwGHNh7Z7T
+      if not head2 then
+        return
+      end
+
+      if v3.ESPName then
+        local billboardGui = Instance.new("BillboardGui")
+        billboardGui.Name = value17.Name
+        billboardGui.Adornee = head2
+        billboardGui.Size = UDim2.new(0, 200, 0, 50)
+        billboardGui.StudsOffset = Vector3.new(0, 2.5, 0)
+        billboardGui.AlwaysOnTop = true
+        billboardGui.Parent = mituESP
+
+        local textLabel = Instance.new("TextLabel")
+        textLabel.Size = UDim2.new(1, 0, v3.ESPDistance and 0.5 or 1, 0)
+        textLabel.BackgroundTransparency = 1
+        textLabel.Text = value17.Name
+        textLabel.TextColor3 = Color3.new(1, 1, 1)
+        textLabel.TextStrokeTransparency = 0.3
+        textLabel.Font = Enum.Font.GothamBold
+        textLabel.TextSize = 14
+        textLabel.Parent = billboardGui
+
+        if v3.ESPDistance then
+          local dist = Instance.new("TextLabel")
+          dist.Name = "Dist"
+          dist.Size = UDim2.new(1, 0, 0.5, 0)
+          dist.Position = UDim2.new(0, 0, 0.5, 0)
+          dist.BackgroundTransparency = 1
+          dist.TextColor3 = Color3.fromRGB(180, 255, 180)
+          dist.Font = Enum.Font.Gotham
+          dist.TextSize = 12
+          dist.Parent = billboardGui
+        end
+      end
+
+      if v3.ESPHighlight then
+        local highlight = Instance.new("Highlight")
+        highlight.Name = "HL_" .. value17.Name
+        highlight.Adornee = character4
+        highlight.FillColor = v3.ESPFillColor
+        highlight.FillTransparency = v3.ESPFillTransparency
+        highlight.OutlineColor = v3.ESPOutlineColor
+        highlight.OutlineTransparency = v3.ESPOutlineTransparency
+        highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+        highlight.Parent = mituESP
+      end
+
+      return
+    end
+  end
+end
+
+local function f42(p16)
+  if not spawnToyRemoteFunction then
+    return nil
+  end
+
+  local v110
+  v715, v110 = f3(localPlayer)
+  local v111
+
+  if not v110 then
+    return nil
+  else
+    local findFirstChild7 = workspaceService:FindFirstChild(localPlayer.Name .. "SpawnedInToys")
+    local v112 = {}
+
+    if findFirstChild7 then
+      for index15, value18 in ipairs(findFirstChild7:GetChildren()) do
+        v112[value18] = true
+      end
+    end
+
+    v111 = p16 == "Left" and -1 or 1
+
+    pcall(function()
+      spawnToyRemoteFunction:InvokeServer(
+        "PalletLightBrown", v110.CFrame * CFrame.new(v111 * 3.2, 0.5, 0),
+        Vector3.new(0, v110.Orientation.Y, 0)
+      )
+    end)
+
+    task.wait(0.12)
+
+    if not findFirstChild7 then
+      findFirstChild7 = workspaceService:FindFirstChild(localPlayer.Name .. "SpawnedInToys")
+    end
+
+    if not findFirstChild7 then
+      return nil
+    else
+      local v113 = nil
+
+      for index16, value19 in ipairs(findFirstChild7:GetChildren()) do
+        if not v112[value19] and string.find(string.lower(value19.Name), "pallet") then
+          v113 = value19
+          break
+        end
+      end
+
+      if not v113 then
+        return nil
+      end
+
+      for index17, value20 in ipairs(v113:GetDescendants()) do
+        if value20:IsA("BasePart") then
+          value20.CanCollide = true
+
+          value20.Touched:Connect(function(part)
+            if not v3.Wing or not part or not part:IsA("BasePart") then
+              return
+            end
+
+            if localPlayer.Character and part:IsDescendantOf(localPlayer.Character) then
+              return
+            end
+
+            for index18, value21 in ipairs(v109) do
+              if value21 and part:IsDescendantOf(value21) then
+                return
+              end
+            end
+
+            local vector4 = Vector3.new(
+              math.random(-20, 20), v3.FlapPower + math.random(10, 40), math.random(-20, 20)
+            )
+
+            pcall(function()
+              part.AssemblyLinearVelocity = part.AssemblyLinearVelocity + vector4
+              part.Velocity = (part.Velocity or Vector3.zero) + vector4
+            end)
+
+            if setNetworkOwner then
+              pcall(function() setNetworkOwner:FireServer(part, part.CFrame) end)
+            end
+          end)
+        end
+      end
+
+      return v113
+    end
+  end
+end
+
+local f43
+
+local function f44()
+  v3.Wing = false
+  f43()
+end
+
+local connect3
+
+function f43()
+  for index19, value22 in ipairs(v109) do
+  end
+
+  v109 = {}
+
+  if connect3 then
+    connect3:Disconnect()
+    connect3 = nil
+  end
+end
+
+local function f45()
+  f43()
+  v3.Wing = true
+  local left = f42("Left")
+  local right = f42("Right")
+
+  if left then
+    table.insert(v109, left)
+  end
+
+  if right then
+    table.insert(v109, right)
+  end
+
+  if #v109 == 0 then
+    v3.Wing = false
+    f2("Wing", "Failed")
+    return
+  end
+
+  local v114 = os.clock()
+
+  connect3 = heartbeat:Connect(function()
+    if not v3.Wing then
+      return
+    else
+      local v115, v116 = f3(localPlayer)
+
+      if not v116 then
+        return
+      else
+        local v117 = math.sin((os.clock() - v114) * v3.FlapSpeed) * 35
+
+        for index20, value23 in ipairs(v109) do
+          local v118 = value23
+          local parent = v118
+          local v119 = not parent
+          local v120 = v119
+
+          if not v119 then
+            parent = v118.Parent
+            v120 = not parent
+          end
+
+          if not v120 then
+            local v121 = index20 == 1 and -1 or 1
+            local v122 = index20 == 1 and -v117 or v117
+
+            local v123 = v116.CFrame * CFrame.new(v121 * 3.2, 0.8, 0)
+              * CFrame.Angles(math.rad(v122), 0, math.rad(v121 * 70))
+
+            pcall(function()
+              v118:PivotTo(v123)
+              local primaryPart2 = v118.PrimaryPart or v118:FindFirstChildWhichIsA("BasePart")
+
+              if primaryPart2 then
+                primaryPart2.AssemblyLinearVelocity = Vector3.zero
+              end
+
+              if setNetworkOwner and primaryPart2 then
+                setNetworkOwner:FireServer(primaryPart2, v123)
+              end
+            end)
+          end
+        end
+
+        return
+      end
+    end
+  end)
+
+  f2("Wing", "ON")
+end
+
+local heartbeat2 = runService.Heartbeat
+local connect4
+
+local function f46()
+  if connect4 then
+    connect4:Disconnect()
+  end
+
+  connect4 = userInputService.JumpRequest:Connect(function()
+    if not v3.InfiniteJump then
+      return
+    else
+      local humanoid4 = localPlayer.Character
+        and localPlayer.Character:FindFirstChildOfClass("Humanoid")
+
+      if humanoid4 then
+        humanoid4:ChangeState(Enum.HumanoidStateType.Jumping)
+      end
+
+      return
+    end
+  end)
+end
+
+heartbeat2:Connect(function()
+  local humanoid5 = localPlayer.Character
+    and localPlayer.Character:FindFirstChildOfClass("Humanoid")
+
+  if not humanoid5 then
+    return
+  end
+
+  if humanoid5.WalkSpeed ~= v3.WalkSpeed then
+    humanoid5.WalkSpeed = v3.WalkSpeed
+  end
+
+  pcall(function()
+    if humanoid5.UseJumpPower ~= nil then
+      humanoid5.UseJumpPower = true
+      humanoid5.JumpPower = v3.JumpPower
+    else
+      humanoid5.JumpHeight = v3.JumpPower / 5
+    end
+  end)
+end)
+
+connect4 = nil
+local connect5 = nil
+
+local function f47()
+  v3.ThirdPerson = false
+
+  if connect5 then
+    connect5:Disconnect()
+    connect5 = nil
+  end
+
+  localPlayer.CameraMinZoomDistance = 0.5
+  localPlayer.CameraMaxZoomDistance = 128
+end
+
+local function f48()
+  if connect5 then
+    connect5:Disconnect()
+  end
+
+  localPlayer.CameraMode = Enum.CameraMode.Classic
+  localPlayer.CameraMinZoomDistance = v3.ThirdPersonDistance
+  localPlayer.CameraMaxZoomDistance = v3.ThirdPersonDistance + 25
+
+  connect5 = runService.RenderStepped:Connect(function()
+    if not v3.ThirdPerson then
+      return
+    else
+      local humanoid6 = localPlayer.Character
+        and localPlayer.Character:FindFirstChildOfClass("Humanoid")
+
+      if humanoid6 then
+        currentCamera.CameraType = Enum.CameraType.Custom
+        currentCamera.CameraSubject = humanoid6
+      end
+
+      return
+    end
+  end)
+end
+
+local connect6
+
+local function f49()
+  if connect6 then
+    connect6:Disconnect()
+  end
+
+  connect6 = heartbeat:Connect(function()
+    if not v3.WaterWalk then
+      return
+    else
+      local character5 = localPlayer.Character
+      local humanoidRootPart9 = character5 and character5:FindFirstChild("HumanoidRootPart")
+
+      local humanoid7 = character5
+      humanoid7 = character5 and character5:FindFirstChildOfClass("Humanoid")
+
+      local v124 = not humanoidRootPart9
+      local v125 = humanoid7
+
+      if v124 or not v125 then
+        return
+      else
+        if v125:GetState() == Enum.HumanoidStateType.Swimming then
+          v125:ChangeState(Enum.HumanoidStateType.GettingUp)
+        end
+
+        local expandToGrid = Region3.new(humanoidRootPart9.Position
+          - Vector3.new(2, 4, 2), humanoidRootPart9.Position
+          + Vector3.new(2, 1, 2)):ExpandToGrid(4)
+
+        local v126, v127 = pcall(function()
+          return workspaceService.Terrain:ReadVoxels(expandToGrid, 4)
+        end)
+
+        local v128 = false
+
+        if v126 and v127 then
+          for key2, value24 in pairs(v127) do
+            for key3, value25 in pairs(value24) do
+              for key4, value26 in pairs(value25) do
+                if value26 == Enum.Material.Water then
+                  v128 = true
+                  break
+                end
+              end
+
+              if v128 then
+                break
+              end
+            end
+
+            if v128 then
+              break
+            end
+          end
+        end
+
+        if v128 then
+          local assemblyLinearVelocity = humanoidRootPart9.AssemblyLinearVelocity
+
+          humanoidRootPart9.AssemblyLinearVelocity = Vector3.new(assemblyLinearVelocity.X, math.max(
+            assemblyLinearVelocity.Y, 1
+          ), assemblyLinearVelocity.Z)
+        end
+
+        return
+      end
+    end
+  end)
+end
+
+local connect7
+
+local function f50()
+  if connect7 then
+    connect7:Disconnect()
+  end
+
+  connect7 = runService.Stepped:Connect(function()
+    if not v3.Noclip then
+      return
+    else
+      local character6 = localPlayer.Character
+
+      if not character6 then
+        return
+      end
+
+      for index21, value27 in ipairs(character6:GetDescendants()) do
+        if value27:IsA("BasePart") then
+          value27.CanCollide = false
+        end
+      end
+
+      return
+    end
+  end)
+end
+
+local function f51()
+  if mituESP then
+    mituESP:Destroy()
+    mituESP = nil
+  end
+end
+
+local connect8, bodyVelocity, bodyGyro
+
+local function f52()
+  v3.Fly = false
+
+  if connect8 then
+    connect8:Disconnect()
+    connect8 = nil
+  end
+
+  if bodyVelocity then
+    pcall(function() bodyVelocity:Destroy() end)
+    bodyVelocity = nil
+  end
+
+  if bodyGyro then
+    pcall(function() bodyGyro:Destroy() end)
+    bodyGyro = nil
+  end
+
+  local humanoid8 = localPlayer.Character
+    and localPlayer.Character:FindFirstChildOfClass("Humanoid")
+
+  if humanoid8 then
+    humanoid8.PlatformStand = false
+  end
+end
+
+local connect9
+
+local function f53()
+  if connect9 then
+    connect9:Disconnect()
+  end
+
+  connect9 = runService.RenderStepped:Connect(function()
+    if not v3.SpinChar then
+      return
+    else
+      local v129, v130 = f3(localPlayer)
+
+      if v130 then
+        v130.CFrame = v130.CFrame * CFrame.Angles(0, math.rad(v3.SpinSpeed * 2), 0)
+      end
+
+      return
+    end
+  end)
+end
+
+local function makeBodyVelocity()
+  f52()
+  v3.Fly = true
+  local character7 = localPlayer.Character
+  local humanoidRootPart10 = character7 and character7:FindFirstChild("HumanoidRootPart")
+  local humanoid9 = character7 and character7:FindFirstChildOfClass("Humanoid")
+
+  if not humanoidRootPart10 or not humanoid9 then
+    v3.Fly = false
+    return
+  end
+
+  humanoid9.PlatformStand = true
+
+  bodyVelocity = Instance.new("BodyVelocity")
+  bodyVelocity.MaxForce = Vector3.new(9000000000, 9000000000, 9000000000)
+  bodyVelocity.Velocity = Vector3.zero
+  bodyVelocity.Parent = humanoidRootPart10
+
+  bodyGyro = Instance.new("BodyGyro")
+  bodyGyro.MaxTorque = Vector3.new(9000000000, 9000000000, 9000000000)
+  bodyGyro.P = 90000
+  bodyGyro.Parent = humanoidRootPart10
+
+  connect8 = runService.RenderStepped:Connect(function()
+    if not v3.Fly then
+      return
+    end
+
+    character7 = localPlayer.Character
+    humanoidRootPart10 = character7 and character7:FindFirstChild("HumanoidRootPart")
+    humanoid9 = character7 and character7:FindFirstChildOfClass("Humanoid")
+
+    if not humanoidRootPart10 or not humanoid9 then
+      return
+    else
+      if not bodyVelocity or not bodyVelocity.Parent then
+        bodyVelocity = Instance.new("BodyVelocity")
+        bodyVelocity.MaxForce = Vector3.new(9000000000, 9000000000, 9000000000)
+        bodyVelocity.Parent = humanoidRootPart10
+      end
+
+      if not bodyGyro or not bodyGyro.Parent then
+        bodyGyro = Instance.new("BodyGyro")
+        bodyGyro.MaxTorque = Vector3.new(9000000000, 9000000000, 9000000000)
+        bodyGyro.P = 90000
+        bodyGyro.Parent = humanoidRootPart10
+      end
+
+      humanoid9.PlatformStand = true
+      bodyGyro.CFrame = currentCamera.CFrame
+      local zero = Vector3.zero
+
+      if userInputService:IsKeyDown(Enum.KeyCode.W) then
+        zero = zero + currentCamera.CFrame.LookVector
+      end
+
+      if userInputService:IsKeyDown(Enum.KeyCode.S) then
+        zero = zero - currentCamera.CFrame.LookVector
+      end
+
+      if userInputService:IsKeyDown(Enum.KeyCode.A) then
+        zero = zero - currentCamera.CFrame.RightVector
+      end
+
+      if userInputService:IsKeyDown(Enum.KeyCode.D) then
+        zero = zero + currentCamera.CFrame.RightVector
+      end
+
+      if userInputService:IsKeyDown(Enum.KeyCode.Space) then
+        zero = zero + Vector3.new(0, 1, 0)
+      end
+
+      if userInputService:IsKeyDown(Enum.KeyCode.LeftControl)
+        or userInputService:IsKeyDown(Enum.KeyCode.C) then
+        zero = zero - Vector3.new(0, 1, 0)
+      end
+
+      local v131 = bodyVelocity
+      v131.Velocity = zero.Magnitude > 0 and zero.Unit * v3.FlySpeed or Vector3.zero
+
+      return
+    end
+  end)
+end
+
+localPlayer.CharacterAdded:Connect(function()
+  task.wait(0.4)
+
+  if v3.Fly then
+    makeBodyVelocity()
+  end
+
+  if v3.Wing then
+    task.defer(f45)
+  end
+end)
+
+local connect10
+
+local function f54()
+  if connect10 then
+    return
+  end
+
+  connect10 = heartbeat:Connect(function()
+    if not v3.AntiFire then
+      return
+    else
+      local character8 = localPlayer.Character
+
+      if not character8 then
+        return
+      end
+
+      for index22, value28 in ipairs(character8:GetDescendants()) do
+        local v132 = value28
+
+        if v132:IsA("Fire") then
+          pcall(function() v132:Destroy() end)
+        end
+      end
+
+      return
+    end
+  end)
+end
+
+local connect11
+
+local function f55()
+  if connect11 then
+    return
+  end
+
+  connect11 = heartbeat:Connect(function()
+    if not v3.AntiGrab then
+      return
+    else
+      local character9 = localPlayer.Character
+
+      if not character9 then
+        return
+      end
+
+      for index23, value29 in ipairs(character9:GetDescendants()) do
+        local v133 = value29
+
+        if v133:IsA("Weld") or v133:IsA("WeldConstraint") then
+          local v134 = string.lower(v133.Name)
+
+          if string.find(v134, "grab") or string.find(v134, "hold") then
+            pcall(function() v133:Destroy() end)
+          end
+        end
+      end
+
+      if struggle then
+        pcall(function() struggle:FireServer() end)
+      end
+
+      return
+    end
+  end)
+end
+
+local connect12
+
+local function f56()
+  v3.AntiOwnership = false
+
+  if connect12 then
+    connect12:Disconnect()
+    connect12 = nil
+  end
+end
+
+local connect13
+
+local function f57()
+  if connect13 then
+    return
+  end
+
+  connect13 = heartbeat:Connect(function()
+    local antiKick = v3.AntiKick
+    local humanoidRootPart11, humanoid10
+
+    if not (antiKick or v3.AntiLag) then
+      return
+    else
+      local character10 = localPlayer.Character
+      humanoidRootPart11 = character10 and character10:FindFirstChild("HumanoidRootPart")
+      humanoid10 = character10 and character10:FindFirstChildOfClass("Humanoid")
+
+      if not humanoidRootPart11 then
+        return
+      end
+
+      if struggle then
+        pcall(function() struggle:FireServer() end)
+      end
+
+      if stopAllVelocity then
+        pcall(function() stopAllVelocity:FireServer() end)
+      end
+
+      if setNetworkOwner then
+        pcall(function()
+          setNetworkOwner:FireServer(humanoidRootPart11, humanoidRootPart11.CFrame)
+        end)
+      end
+
+      if humanoid10 then
+        pcall(function()
+          if humanoid10:FindFirstChild("Ragdolled") then
+            humanoid10.Ragdolled.Value = false
+          end
+
+          humanoid10.PlatformStand = false
+          humanoid10.Sit = false
+        end)
+      end
+
+      for index24, value30 in ipairs(character10:GetDescendants()) do
+        local v135 = value30
+
+        if v135:IsA("Weld") or v135:IsA("WeldConstraint") then
+          local v136 = string.lower(v135.Name)
+
+          if string.find(v136, "grab") or string.find(v136, "kick") or string.find(v136, "hold") then
+            pcall(function() v135:Destroy() end)
+          end
+        end
+      end
+
+      return
+    end
+  end)
+end
+
+local connect14
+
+local function f58()
+  if connect14 then
+    return
+  end
+
+  connect14 = heartbeat:Connect(function()
+    local character11 = localPlayer.Character
+
+    if not character11 then
+      return
+    end
+
+    local humanoidRootPart12 = character11:FindFirstChild("HumanoidRootPart")
+    local humanoid11 = character11:FindFirstChildOfClass("Humanoid")
+
+    if v3.AntiSnowball or v3.AntiBanana then
+      if humanoid11 and humanoid11:FindFirstChild("Ragdolled") then
+        pcall(function() humanoid11.Ragdolled.Value = false end)
+      end
+
+      if struggle then
+        pcall(function() struggle:FireServer() end)
+      end
+    end
+
+    if v3.AntiVoid and humanoidRootPart12 and humanoidRootPart12.Position.Y < -30 then
+      pcall(function()
+        humanoidRootPart12.CFrame = CFrame.new(
+          humanoidRootPart12.Position.X, 20, humanoidRootPart12.Position.Z
+        )
+
+        humanoidRootPart12.AssemblyLinearVelocity = Vector3.zero
+      end)
+    end
+
+    if v3.AntiPaint then
+      for index25, value31 in ipairs(character11:GetDescendants()) do
+        local v137 = value31
+
+        if v137:IsA("Decal") or v137:IsA("Texture") then
+          local v138 = string.lower(v137.Name)
+
+          if string.find(v138, "paint") or string.find(v138, "spray") then
+            pcall(function() v137:Destroy() end)
+          end
+        end
+      end
+    end
+  end)
+end
+
+local function f59()
+  if connect12 then
+    return
+  end
+
+  connect12 = heartbeat:Connect(function()
+    local humanoidRootPart13
+
+    if not v3.AntiOwnership then
+      return
+    else
+      local character12 = localPlayer.Character
+      humanoidRootPart13 = character12 and character12:FindFirstChild("HumanoidRootPart")
+
+      if humanoidRootPart13 and setNetworkOwner then
+        pcall(function()
+          setNetworkOwner:FireServer(humanoidRootPart13, humanoidRootPart13.CFrame)
+        end)
+      end
+
+      return
+    end
+  end)
+end
+
+mituESP = nil
+
+local function makeFolder()
+  f51()
+
+  if not v3.ESPEnabled then
+    return
+  end
+
+  mituESP = Instance.new("Folder")
+  mituESP.Name = "mitu_ESP"
+  mituESP.Parent = coreGui
+
+  for index26, value32 in ipairs(f5()) do
+    if value32.Character then
+      makeTextLabel(value32)
+    end
+  end
+end
+
+local connect15
+
+local function f60()
+  v3.ESPEnabled = true
+  makeFolder()
+
+  if connect15 then
+    connect15:Disconnect()
+  end
+
+  connect15 = heartbeat:Connect(function()
+    if not v3.ESPEnabled or not mituESP then
+      return
+    else
+      for index27, value33 in ipairs(f5()) do
+        if value33.Character then
+          makeTextLabel(value33)
+        end
+      end
+
+      local character13 = localPlayer.Character
+
+      local humanoidRootPart14 = character13
+
+      humanoidRootPart14 = character13
+        and localPlayer.Character:FindFirstChild("HumanoidRootPart")
+
+      if humanoidRootPart14 then
+        for index28, value34 in ipairs(mituESP:GetChildren()) do
+          if value34:IsA("BillboardGui") then
+            local dist2 = value34:FindFirstChild("Dist")
+            local findFirstChild8 = players:FindFirstChild(value34.Name)
+
+            local humanoidRootPart15 = findFirstChild8 and findFirstChild8.Character
+              and findFirstChild8.Character:FindFirstChild("HumanoidRootPart")
+
+            if dist2 and humanoidRootPart15 then
+              dist2.Text = math.floor((humanoidRootPart14.Position
+                  - humanoidRootPart15.Position).Magnitude)
+                .. " studs"
+            end
+          end
+        end
+      end
+
+      for index29, value35 in ipairs(mituESP:GetChildren()) do
+        if value35:IsA("Highlight") then
+          value35.FillColor = v3.ESPFillColor
+          value35.OutlineColor = v3.ESPOutlineColor
+          value35.FillTransparency = v3.ESPFillTransparency
+          value35.OutlineTransparency = v3.ESPOutlineTransparency
+        end
+      end
+
+      return
+    end
+  end)
+end
+
+local function f61()
+  v3.ESPEnabled = false
+
+  if connect15 then
+    connect15:Disconnect()
+    connect15 = nil
+  end
+
+  f51()
+end
+
+local function f62()
+  local v139 = {}
+
+  for index30, value36 in ipairs(f5()) do
+    table.insert(v139, value36.Name)
+  end
+
+  return v139
+end
+
+local window = orion20X:MakeWindow({
+  Name = f1("window"),
+  HidePremium = false,
+  SaveConfig = true,
+  ConfigFolder = "mitu_hub_beta",
+})
+
+local tab = window:MakeTab({ Name = f1("main"), Icon = v1.Home, PremiumOnly = false })
+local tab2 = window:MakeTab({ Name = f1("player"), Icon = v1.User, PremiumOnly = false })
+local tab3 = window:MakeTab({ Name = f1("kick"), Icon = v1.Sword, PremiumOnly = false })
+local tab4 = window:MakeTab({ Name = f1("kill"), Icon = v1.Skull, PremiumOnly = false })
+local tab5 = window:MakeTab({ Name = f1("esp"), Icon = v1.Eye, PremiumOnly = false })
+local tab6 = window:MakeTab({ Name = f1("defense"), Icon = v1.Shield, PremiumOnly = false })
+local tab7 = window:MakeTab({ Name = f1("language"), Icon = v1.Zap, PremiumOnly = false })
+
+tab:AddDropdown({
+  Name = f1("select_player"),
+  Default = "",
+  Options = f62(),
+  Callback = function(value37)
+    v3.SelectedPlayer = value37
+    f2(f1("target"), value37)
+  end,
+})
+
+tab:AddButton({ Name = f1("refresh"), Callback = function() f2(f1("window"), "Re-execute") end })
+
+tab:AddButton({
+  Name = f1("spawn_blob"),
+  Callback = function()
+    local v140, v141 = f3(localPlayer)
+
+    if not v141 or not spawnToyRemoteFunction then
+      f2("Blobman", "Cannot spawn")
+      return
+    end
+
+    pcall(function()
+      spawnToyRemoteFunction:InvokeServer(
+        "CreatureBlobman", v141.CFrame * CFrame.new(0, 0, -6),
+        Vector3.new(0, v141.Orientation.Y, 0)
+      )
+    end)
+
+    f2("Blobman", "OK")
+  end,
+})
+
+tab:AddParagraph("Tip", f1("tip_kick"))
+
+tab2:AddSlider({
+  Name = f1("walkspeed"),
+  Min = 16,
+  Max = 200,
+  Default = 16,
+  Increment = 1,
+  Callback = function(value38) v3.WalkSpeed = value38 end,
+})
+
+tab2:AddSlider({
+  Name = f1("jumppower"),
+  Min = 50,
+  Max = 500,
+  Default = 50,
+  Increment = 5,
+  Callback = function(value39) v3.JumpPower = value39 end,
+})
+
+tab2:AddToggle({
+  Name = f1("inf_jump"),
+  Default = false,
+  Callback = function(value40)
+    v3.InfiniteJump = value40
+
+    if value40 then
+      f46()
+    elseif connect4 then
+      connect4:Disconnect()
+      connect4 = nil
+    end
+  end,
+})
+
+tab2:AddToggle({
+  Name = f1("noclip"),
+  Default = false,
+  Callback = function(value41)
+    v3.Noclip = value41
+
+    if value41 then
+      f50()
+    elseif connect7 then
+      connect7:Disconnect()
+      connect7 = nil
+    end
+  end,
+})
+
+tab2:AddToggle({
+  Name = f1("third_person"),
+  Default = false,
+  Callback = function(value42)
+    v3.ThirdPerson = value42
+
+    if value42 then
+      f48()
+    else
+      f47()
+    end
+  end,
+})
+
+tab2:AddSlider({
+  Name = f1("tp_distance"),
+  Min = 5,
+  Max = 30,
+  Default = 12,
+  Increment = 1,
+  Callback = function(value43)
+    v3.ThirdPersonDistance = value43
+
+    if v3.ThirdPerson then
+      localPlayer.CameraMinZoomDistance = value43
+      localPlayer.CameraMaxZoomDistance = value43 + 25
+    end
+  end,
+})
+
+tab2:AddToggle({
+  Name = f1("water_walk"),
+  Default = false,
+  Callback = function(value44)
+    v3.WaterWalk = value44
+
+    if value44 then
+      f49()
+    elseif connect6 then
+      connect6:Disconnect()
+      connect6 = nil
+    end
+  end,
+})
+
+tab2:AddToggle({
+  Name = f1("fly"),
+  Default = false,
+  Callback = function(value45)
+    if value45 then
+      makeBodyVelocity()
+    else
+      f52()
+    end
+  end,
+})
+
+tab2:AddSlider({
+  Name = f1("fly_speed"),
+  Min = 20,
+  Max = 200,
+  Default = 50,
+  Increment = 5,
+  Callback = function(value46) v3.FlySpeed = value46 end,
+})
+
+tab2:AddToggle({
+  Name = f1("spin"),
+  Default = false,
+  Callback = function(value47)
+    v3.SpinChar = value47
+
+    if value47 then
+      f53()
+    elseif connect9 then
+      connect9:Disconnect()
+      connect9 = nil
+    end
+  end,
+})
+
+tab2:AddSlider({
+  Name = f1("spin_speed"),
+  Min = 1,
+  Max = 50,
+  Default = 5,
+  Increment = 1,
+  Callback = function(value48) v3.SpinSpeed = value48 end,
+})
+
+tab2:AddToggle({
+  Name = f1("wing"),
+  Default = false,
+  Callback = function(value49)
+    if value49 then
+      f45()
+    else
+      f44()
+    end
+  end,
+})
+
+tab2:AddSlider({
+  Name = f1("flap_speed"),
+  Min = 2,
+  Max = 20,
+  Default = 8,
+  Increment = 1,
+  Callback = function(value50) v3.FlapSpeed = value50 end,
+})
+
+tab2:AddSlider({
+  Name = f1("flap_power"),
+  Min = 20,
+  Max = 200,
+  Default = 90,
+  Increment = 5,
+  Callback = function(value51) v3.FlapPower = value51 end,
+})
+
+tab3:AddParagraph(f1("max_strength"), "x32 grab / KickHeight")
+
+tab3:AddSlider({
+  Name = f1("kick_height"),
+  Min = 5,
+  Max = 50,
+  Default = 15,
+  Increment = 1,
+  Callback = function(value52) v3.KickHeight = value52 end,
+})
+
+tab3:AddToggle({
+  Name = f1("line_lag_sel"),
+  Default = false,
+  Callback = function(value53)
+    v3.LineLag = value53
+
+    if value53 then
+      if not f4() then
+        f2("Error", f1("err_select"))
+        v3.LineLag = false
+        return
+      end
+
+      f11()
+      return
+    end
+  end,
+})
+
+tab3:AddToggle({
+  Name = f1("line_lag_all"),
+  Default = false,
+  Callback = function(value54)
+    v3.LineLagAll = value54
+
+    if value54 then
+      f11()
+    end
+  end,
+})
+
+tab3:AddSlider({
+  Name = f1("lag_intensity"),
+  Min = 10,
+  Max = 40,
+  Default = 30,
+  Increment = 1,
+  Callback = function(value55) v3.LagIntensity = value55 end,
+})
+
+tab3:AddToggle({
+  Name = f1("no_blob_sel"),
+  Default = false,
+  Callback = function(value56)
+    v3.NoBlobKick = value56
+
+    if value56 then
+      if not f4() then
+        f2("Error", f1("err_select"))
+        v3.NoBlobKick = false
+        return
+      end
+
+      f14()
+      return
+    end
+
+    f12()
+  end,
+})
+
+tab3:AddToggle({
+  Name = f1("no_blob_all"),
+  Default = false,
+  Callback = function(value57)
+    v3.NoBlobKickAll = value57
+
+    if value57 then
+      f15()
+    else
+      f16()
+    end
+  end,
+})
+
+tab3:AddToggle({
+  Name = f1("blob_spam_sel"),
+  Default = false,
+  Callback = function(value58)
+    v3.BlobSpamKick = value58
+
+    if value58 then
+      if not f4() then
+        f2("Error", f1("err_select"))
+        v3.BlobSpamKick = false
+        return
+      end
+
+      f19()
+      return
+    end
+
+    f18()
+  end,
+})
+
+tab3:AddToggle({
+  Name = f1("blob_spam_all"),
+  Default = false,
+  Callback = function(value59)
+    v3.BlobSpamKickAll = value59
+
+    if value59 then
+      f20()
+    else
+      f21()
+    end
+  end,
+})
+
+tab3:AddToggle({
+  Name = f1("drift_kick"),
+  Default = false,
+  Callback = function(value60)
+    if value60 then
+      f29()
+    else
+      f26()
+      f2("Drift", f1("stopped"))
+    end
+  end,
+})
+
+tab3:AddToggle({
+  Name = f1("drift_kick_all"),
+  Default = false,
+  Callback = function(value61)
+    if value61 then
+      f27()
+    else
+      f26()
+      f2("Drift All", f1("stopped"))
+    end
+  end,
+})
+
+tab3:AddSlider({
+  Name = f1("drift_radius"),
+  Min = 5,
+  Max = 80,
+  Default = 19,
+  Increment = 1,
+  Callback = function(value62) v32.Radius = value62 end,
+})
+
+tab3:AddSlider({
+  Name = f1("drift_speed"),
+  Min = 1,
+  Max = 50,
+  Default = 12,
+  Increment = 1,
+  Callback = function(value63) v32.Speed = value63 end,
+})
+
+tab3:AddSlider({
+  Name = f1("drift_center"),
+  Min = 10,
+  Max = 120,
+  Default = 40,
+  Increment = 1,
+  Callback = function(value64) v32.CenterHeight = value64 end,
+})
+
+tab3:AddSlider({
+  Name = f1("drift_offset"),
+  Min = -20,
+  Max = 50,
+  Default = 0,
+  Increment = 1,
+  Callback = function(value65) v32.HeightOffset = value65 end,
+})
+
+tab3:AddSlider({
+  Name = f1("drift_grabs"),
+  Min = 1,
+  Max = 20,
+  Default = 2,
+  Increment = 1,
+  Callback = function(value66) v32.GrabCount = value66 end,
+})
+
+tab3:AddSlider({
+  Name = f1("drift_interval"),
+  Min = 1,
+  Max = 50,
+  Default = 8,
+  Increment = 1,
+  Callback = function(value67) v32.GrabInterval = value67 / 10 end,
+})
+
+tab3:AddToggle({
+  Name = f1("snowball"),
+  Default = false,
+  Callback = function(value68)
+    v3.SnowballRagdoll = value68
+
+    if value68 then
+      if not f4() then
+        f2("Error", f1("err_select"))
+        v3.SnowballRagdoll = false
+        return
+      end
+
+      f31()
+      return
+    end
+  end,
+})
+
+tab3:AddToggle({
+  Name = f1("pencil_kill"),
+  Default = false,
+  Callback = function(value69)
+    v3.PencilKill = value69
+
+    if value69 then
+      if not f4() then
+        f2("Error", f1("err_select"))
+        v3.PencilKill = false
+        return
+      end
+
+      f34()
+      return
+    end
+  end,
+})
+
+tab3:AddToggle({
+  Name = f1("blob_kill"),
+  Default = false,
+  Callback = function(value70)
+    v3.BlobKill = value70
+
+    if value70 then
+      if not f4() then
+        f2("Error", f1("err_select"))
+        v3.BlobKill = false
+        return
+      end
+
+      f36()
+      return
+    end
+  end,
+})
+
+tab3:AddToggle({
+  Name = f1("antikick_breaker"),
+  Default = false,
+  Callback = function(value71)
+    v3.AntiKickBreaker = value71
+
+    if value71 then
+      if not f4() then
+        f2("Error", f1("err_select"))
+        v3.AntiKickBreaker = false
+        return
+      end
+
+      f32()
+      return
+    end
+  end,
+})
+
+tab3:AddButton({
+  Name = f1("break_gucci"),
+  Callback = function()
+    for index31, value72 in ipairs(workspaceService:GetDescendants()) do
+      local v142 = value72
+
+      if v142:IsA("VehicleSeat") or v142:IsA("Seat") then
+        local v143 = string.lower(v142.Name .. (v142.Parent and v142.Parent.Name or ""))
+
+        if string.find(v143, "gucci") or string.find(v143, "tractor")
+          or string.find(v143, "sleigh") then
+          pcall(function()
+            v142.Disabled = true
+            local basePart = v142.Parent and v142.Parent:FindFirstChildWhichIsA("BasePart")
+
+            if basePart and setNetworkOwner then
+              setNetworkOwner:FireServer(basePart, basePart.CFrame)
+            end
+          end)
+        end
+      end
+    end
+
+    f2("Breaker", "Gucci/Vehicle attempt")
+  end,
+})
+
+tab3:AddToggle({
+  Name = f1("packet_lag"),
+  Default = false,
+  Callback = function(value73)
+    v3.PacketLag = value73
+
+    if value73 then
+      f37()
+    elseif connect2 then
+      connect2:Disconnect()
+      connect2 = nil
+    end
+  end,
+})
+
+tab3:AddSlider({
+  Name = f1("packet_str"),
+  Min = 50,
+  Max = 500,
+  Default = 200,
+  Increment = 10,
+  Callback = function(value74) v3.PacketLagStrength = value74 end,
+})
+
+tab3:AddButton({
+  Name = f1("stop_kick"),
+  Callback = function()
+    v3.LineLag = false
+    v3.LineLagAll = false
+    v3.SnowballRagdoll = false
+    v3.PencilKill = false
+    v3.BlobKill = false
+    v3.AntiKickBreaker = false
+    v3.PacketLag = false
+
+    f12()
+    f16()
+    f18()
+    f21()
+    f26()
+
+    if connect then
+      connect:Disconnect()
+      connect = nil
+    end
+
+    if connect2 then
+      connect2:Disconnect()
+      connect2 = nil
+    end
+
+    f2(f1("window"), f1("stopped"))
+  end,
+})
+
+tab4:AddToggle({
+  Name = f1("kill_sel"),
+  Default = false,
+  Callback = function(value75)
+    v3.KillSelected = value75
+
+    if value75 then
+      if not f4() then
+        f2("Error", f1("err_select"))
+        v3.KillSelected = false
+        return
+      end
+
+      f39()
+      return
+    end
+
+    f35()
+  end,
+})
+
+tab4:AddToggle({
+  Name = f1("kill_all"),
+  Default = false,
+  Callback = function(value76)
+    v3.KillAll = value76
+
+    if value76 then
+      f41()
+    else
+      f40()
+    end
+  end,
+})
+
+tab4:AddSlider({
+  Name = f1("void_height"),
+  Min = -200,
+  Max = -20,
+  Default = -80,
+  Increment = 10,
+  Callback = function(value77) v3.SeaY = value77 end,
+})
+
+tab4:AddButton({
+  Name = f1("stop_kill"),
+  Callback = function()
+    f35()
+    f40()
+    f2(f1("window"), f1("stopped"))
+  end,
+})
+
+tab5:AddToggle({
+  Name = f1("enable_esp"),
+  Default = false,
+  Callback = function(value78)
+    if value78 then
+      f60()
+    else
+      f61()
+    end
+  end,
+})
+
+tab5:AddToggle({
+  Name = f1("esp_name"),
+  Default = true,
+  Callback = function(value79)
+    v3.ESPName = value79
+
+    if v3.ESPEnabled then
+      makeFolder()
+    end
+  end,
+})
+
+tab5:AddToggle({
+  Name = f1("esp_dist"),
+  Default = true,
+  Callback = function(value80)
+    v3.ESPDistance = value80
+
+    if v3.ESPEnabled then
+      makeFolder()
+    end
+  end,
+})
+
+tab5:AddToggle({
+  Name = f1("esp_hl"),
+  Default = true,
+  Callback = function(value81)
+    v3.ESPHighlight = value81
+
+    if v3.ESPEnabled then
+      makeFolder()
+    end
+  end,
+})
+
+tab5:AddColorpicker({
+  Name = f1("fill_color"),
+  Default = Color3.fromRGB(100, 180, 255),
+  Callback = function(value82) v3.ESPFillColor = value82 end,
+})
+
+tab5:AddColorpicker({
+  Name = f1("outline_color"),
+  Default = Color3.fromRGB(255, 255, 255),
+  Callback = function(value83) v3.ESPOutlineColor = value83 end,
+})
+
+tab5:AddSlider({
+  Name = f1("fill_trans"),
+  Min = 0,
+  Max = 1,
+  Default = 0.65,
+  Increment = 0.05,
+  Callback = function(value84) v3.ESPFillTransparency = value84 end,
+})
+
+tab5:AddSlider({
+  Name = f1("outline_trans"),
+  Min = 0,
+  Max = 1,
+  Default = 0.25,
+  Increment = 0.05,
+  Callback = function(value85) v3.ESPOutlineTransparency = value85 end,
+})
+
+tab6:AddToggle({
+  Name = f1("anti_grab"),
+  Default = false,
+  Callback = function(value86)
+    v3.AntiGrab = value86
+
+    if value86 then
+      f55()
+    elseif connect11 then
+      connect11:Disconnect()
+      connect11 = nil
+    end
+  end,
+})
+
+tab6:AddToggle({
+  Name = f1("anti_fire"),
+  Default = false,
+  Callback = function(value87)
+    v3.AntiFire = value87
+
+    if value87 then
+      f54()
+    elseif connect10 then
+      connect10:Disconnect()
+      connect10 = nil
+    end
+  end,
+})
+
+tab6:AddToggle({
+  Name = f1("anti_own"),
+  Default = false,
+  Callback = function(value88)
+    v3.AntiOwnership = value88
+
+    if value88 then
+      f59()
+    else
+      f56()
+    end
+  end,
+})
+
+tab6:AddToggle({
+  Name = f1("anti_kick"),
+  Default = false,
+  Callback = function(value89)
+    v3.AntiKick = value89
+
+    if value89 then
+      f57()
+    end
+  end,
+})
+
+tab6:AddToggle({
+  Name = f1("anti_lag"),
+  Default = false,
+  Callback = function(value90)
+    v3.AntiLag = value90
+
+    if value90 then
+      v3.AntiKick = true
+      f57()
+    end
+  end,
+})
+
+tab6:AddToggle({
+  Name = f1("anti_snow"),
+  Default = false,
+  Callback = function(value91)
+    v3.AntiSnowball = value91
+
+    if value91 then
+      f58()
+    end
+  end,
+})
+
+tab6:AddToggle({
+  Name = f1("anti_banana"),
+  Default = false,
+  Callback = function(value92)
+    v3.AntiBanana = value92
+
+    if value92 then
+      f58()
+    end
+  end,
+})
+
+tab6:AddToggle({
+  Name = f1("anti_void"),
+  Default = false,
+  Callback = function(value93)
+    v3.AntiVoid = value93
+
+    if value93 then
+      f58()
+    end
+  end,
+})
+
+tab6:AddToggle({
+  Name = f1("anti_paint"),
+  Default = false,
+  Callback = function(value94)
+    v3.AntiPaint = value94
+
+    if value94 then
+      f58()
+    end
+  end,
+})
+
+tab7:AddParagraph(f1("lang_label"), f1("lang_note"))
+
+tab7:AddDropdown({
+  Name = f1("lang_label"),
+  Default = mituLang == "ja" and "日本語" or "English",
+  Options = { "English", "日本語" },
+  Callback = function(value95)
+    if value95 == "日本語" then
+      if getgenv then
+        getgenv().MituLang = "ja"
+      end
+
+      f2(f1("window"), "日本語 → 再実行")
+    else
+      if getgenv then
+        getgenv().MituLang = "en"
+      end
+
+      f2(f1("window"), "English → re-execute")
+    end
+  end,
+})
+
+orion20X:MakeNotification({
+  Name = f1("window"),
+  Content = f1("loaded"),
+  Image = v1.Zap,
+  Time = 5,
+})
+
+orion20X:Init()
+
+-- https://discord.gg/AwGHNh7Z7T
